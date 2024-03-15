@@ -110,3 +110,13 @@ or [Linkedin](https://www.linkedin.com/company/18509340)
 ### License
 
 [MIT](https://github.com/epicmaxco/vuestic-admin/blob/master/LICENSE) license.
+
+    <!-- <template #cell(role)="{ rowData }">
+      <VaBadge :text="rowData.role" :color="roleColors[rowData.role as UserRole]" />
+    </template>
+
+    <template #cell(projects)="{ rowData }">
+      <div class="ellipsis max-w-[300px] lg:max-w-[450px]">
+        {{ formatProjectNames(rowData.projects) }}
+      </div>
+    </template> -->
