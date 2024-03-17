@@ -26,6 +26,13 @@ export default {
       },
     },
     {
+      name: 'roles',
+      displayName: 'menu.roles',
+      meta: {
+        icon: 'group',
+      },
+    },
+    {
       name: 'projects',
       displayName: 'menu.projects',
       meta: {

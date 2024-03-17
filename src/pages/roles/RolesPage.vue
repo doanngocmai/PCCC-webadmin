@@ -8,7 +8,7 @@ import { useModal, useToast } from 'vuestic-ui'
 
 const doShowEditRoleModal = ref(false) //khởi tạo show modal = false
 
-const { isLoading, filters, sorting, pagination, roles, ...rolesApi } = useRoles() // lấy các biến từ useUsers.ts
+const { isLoading, filters, sorting, pagination, roles, ...rolesApi } = useRoles() // lấy các biến từ useRoles.ts
 
 const roleToEdit = ref<Role | null>(null) // khởi tạo roleToEdit = Role trong types.ts
 
