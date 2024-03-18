@@ -1,28 +1,21 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { sleep } from '../../services/utils'
 import { Content } from '../../pages/contents/types'
 import contentApi from '../../pages/contents/api/ContentApi'
 
-// export const roles = content as Content[]
+// export const contents = content as Content[]
 
-const roles = ref<Content[]>([])
+const contents = ref<Content[]>([])
 
-const fetchRoleList = async () => {
+const fetchContentList = async () => {
   try {
     const response = await contentApi.getListContent(null)
-    roles.value = response.data.data
+    contents.value = response.data.data
+    console.log(response)
+    console.log(response.data)
   } catch (error) {
-    console.error('Error fetching role list:', error)
+    console.error('Error fetching content list:', error)
   }
-}
-
-onMounted(() => {
-  fetchRoleList()
-})
-
-// Function to refresh role list
-const refreshRoleList = async () => {
-  await fetchRoleList()
 }
 // Simulate API calls
 
@@ -48,9 +41,10 @@ const getSortItem = (obj: any, sortBy: string) => {
 
 export const getContents = async (filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
+  await fetchContentList()
   const { isActive, search, sortBy, sortingOrder } = filters
-  const filteredContents = roles
-  console.log(roles)
+  const filteredContents = contents
+  console.log(contents.value.slice())
 
   filteredContents.value = filteredContents.value.filter((content) => content.isActive === isActive)
 
@@ -90,17 +84,17 @@ export const getContents = async (filters: Partial<Filters & Pagination & Sortin
 export const addContent = async (content: Content) => {
   await sleep(1000)
   await contentApi.createContent(content)
-  await refreshRoleList()
+  await fetchContentList()
 }
 
 export const updateContent = async (content: Content) => {
   await sleep(1000)
   await contentApi.updateContent(content)
-  await refreshRoleList()
+  await fetchContentList()
 }
 
 export const removeContent = async (content: Content) => {
   await sleep(1000)
   await contentApi.deleteContent(content.id)
-  await refreshRoleList()
+  await fetchContentList()
 }

@@ -6,11 +6,15 @@ import roleApi from '../../pages/roles/api/RoleApi'
 // export const roles = role as Role[]
 
 const roles = ref<Role[]>([])
-// Set loading state to true
-const roleList = await roleApi.getListRole(null)
-roles.value = roleList.data.data
-console.log(roleList.data.data)
 
+const fetchRoleList = async () => {
+  try {
+    const response = await roleApi.getListRole(null)
+    roles.value = response.data.data
+  } catch (error) {
+    console.error('Error fetching content list:', error)
+  }
+}
 // Simulate API calls
 
 export type Pagination = {
@@ -38,6 +42,7 @@ const getSortItem = (obj: any, sortBy: string) => {
 
 export const getRoles = async (filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
+  await fetchRoleList()
   const { isActive, search, sortBy, sortingOrder } = filters
   const filteredRoles = roles
   console.log(roles)
@@ -80,14 +85,17 @@ export const getRoles = async (filters: Partial<Filters & Pagination & Sorting>)
 export const addRole = async (role: Role) => {
   await sleep(1000)
   await roleApi.createRole(role)
+  await fetchRoleList()
 }
 
 export const updateRole = async (role: Role) => {
   await sleep(1000)
   await roleApi.updateRole(role)
+  await fetchRoleList()
 }
 
 export const removeRole = async (role: Role) => {
   await sleep(1000)
   await roleApi.deleteRole(role.id)
+  await fetchRoleList()
 }

@@ -44,14 +44,8 @@ const onContentSaved = async (content: Content) => {
 const onContentDelete = async (content: Content) => {
   const res = await contentsApi.remove(content)
   console.log(res)
-  // if (res.value == 200) {
-  //   notify({
-  //     message: `${content.roleName} has been deleted`,
-  //     color: 'success',
-  //   })
-  // }
   notify({
-    message: `${content.name} updated erorr`,
+    message: `${content.name} has been deleted`,
     color: 'error',
   })
 }
