@@ -84,7 +84,7 @@ export const addRole = async (role: Role) => {
 
 export const updateRole = async (role: Role) => {
   await sleep(1000)
-  await roleApi.updateRole(role.id, role)
+  await roleApi.updateRole(role)
 }
 
 export const removeRole = async (role: Role) => {

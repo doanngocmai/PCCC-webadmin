@@ -5,7 +5,7 @@ const roleApi = {
 
   createRole: (data) => ApiClient.post('/api/web/Role/CreateRole', data),
 
-  updateRole: (Id, data) => ApiClient.put(`/api/web/Role/UpdateRole/${Id}`, data),
+  updateRole: (data) => ApiClient.post('/api/web/Role/UpdateRole/', data),
 
   deleteRole: (Id: number) => ApiClient.delete(`/api/web/Role/DeleteRole/${Id}`),
 }
