@@ -33,6 +33,13 @@ export default {
       },
     },
     {
+      name: 'contents',
+      displayName: 'menu.contents',
+      meta: {
+        icon: 'new',
+      },
+    },
+    {
       name: 'projects',
       displayName: 'menu.projects',
       meta: {

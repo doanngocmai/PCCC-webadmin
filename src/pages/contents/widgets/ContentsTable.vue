@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
-import { Role } from '../types'
+import { Content } from '../types'
 import { PropType, computed, toRef } from 'vue'
-import { Pagination, Sorting } from '../../../data/pages/roles'
+import { Pagination, Sorting } from '../../../data/pages/contents'
 import { useVModel } from '@vueuse/core'
 
 const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
-  { label: 'RoleName', key: 'roleName', sortable: true },
-  { label: 'DisplayName', key: 'displayName', sortable: true },
+  { label: 'Name', key: 'name', sortable: true },
+  { label: 'Type', key: 'type', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
 
 const props = defineProps({
   roles: {
-    type: Array as PropType<Role[]>,
+    type: Array as PropType<Content[]>,
     required: true,
   },
   loading: { type: Boolean, default: false },
@@ -24,8 +24,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (event: 'edit-role', role: Role): void
-  (event: 'delete-role', role: Role): void
+  (event: 'edit-content', content: Content): void
+  (event: 'delete-content', content: Content): void
   (event: 'update:sortBy', sortBy: Sorting['sortBy']): void
   (event: 'update:sortingOrder', sortingOrder: Sorting['sortingOrder']): void
 }>()
@@ -38,10 +38,10 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
 
 const { confirm } = useModal()
 
-const onUserDelete = async (role: Role) => {
+const onUserDelete = async (content: Content) => {
   const agreed = await confirm({
-    title: 'Delete role',
-    message: `Are you sure you want to delete ${role.roleName}?`,
+    title: 'Delete content',
+    message: `Are you sure you want to delete ${content.name}?`,
     okText: 'Delete',
     cancelText: 'Cancel',
     size: 'small',
@@ -49,7 +49,7 @@ const onUserDelete = async (role: Role) => {
   })
 
   if (agreed) {
-    emit('delete-role', role)
+    emit('delete-content', content)
   }
 }
 </script>
@@ -85,16 +85,16 @@ const onUserDelete = async (role: Role) => {
           preset="primary"
           size="small"
           icon="mso-edit"
-          aria-label="Edit role"
-          @click="$emit('edit-role', rowData as Role)"
+          aria-label="Edit content"
+          @click="$emit('edit-content', rowData as Content)"
         />
         <VaButton
           preset="primary"
           size="small"
           icon="mso-delete"
           color="danger"
-          aria-label="Delete role"
-          @click="onUserDelete(rowData as Role)"
+          aria-label="Delete content"
+          @click="onUserDelete(rowData as Content)"
         />
       </div>
     </template>

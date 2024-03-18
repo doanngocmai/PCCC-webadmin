@@ -77,7 +77,6 @@ const onSave = () => {
           :rules="[validators.required]"
           name="roleName"
           aria-disabled="true"
-          :disabled="newRole.roleName ? true : false"
         />
         <VaInput
           v-model="newRole.displayName"
