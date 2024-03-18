@@ -85,24 +85,24 @@ const onSave = () => {
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaSelect
           v-model="newContent.type"
-          label="Role"
+          label="Type"
           class="w-full"
           :options="contentSelectOptions"
           :rules="[validators.required]"
-          name="role"
+          name="type"
           value-by="value"
         />
         <VaInput
           v-model="newContent.name"
-          label="Display Name"
+          label="Name"
           class="w-full sm:w-1/2"
           :rules="[validators.required]"
-          name="displayName"
+          name="name"
         />
       </div>
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput v-model="newContent.color" label="Color" class="w-full sm:w-1/2" name="color" />
-        <VaInput v-model="newContent.icon" label="Link" class="w-full sm:w-1/2" name="link" />
+        <VaInput v-model="newContent.link" label="Link" class="w-full sm:w-1/2" name="link" />
       </div>
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput v-model="newContent.icon" label="Icon" class="w-full sm:w-1/2" name="icon" />

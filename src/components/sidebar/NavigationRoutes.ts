@@ -29,14 +29,14 @@ export default {
       name: 'roles',
       displayName: 'menu.roles',
       meta: {
-        icon: 'group',
+        icon: 'co_present',
       },
     },
     {
       name: 'contents',
       displayName: 'menu.contents',
       meta: {
-        icon: 'new',
+        icon: 'topic ',
       },
     },
     {

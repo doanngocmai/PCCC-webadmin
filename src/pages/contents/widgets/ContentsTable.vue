@@ -4,16 +4,19 @@ import { Content } from '../types'
 import { PropType, computed, toRef } from 'vue'
 import { Pagination, Sorting } from '../../../data/pages/contents'
 import { useVModel } from '@vueuse/core'
+import moment from 'moment'
 
 const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
   { label: 'Name', key: 'name', sortable: true },
   { label: 'Type', key: 'type', sortable: true },
+  { label: 'IsActive', key: 'isActive', sortable: true },
+  { label: 'CreationTime', key: 'creationTime', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
 
 const props = defineProps({
-  roles: {
+  contents: {
     type: Array as PropType<Content[]>,
     required: true,
   },
@@ -30,7 +33,7 @@ const emit = defineEmits<{
   (event: 'update:sortingOrder', sortingOrder: Sorting['sortingOrder']): void
 }>()
 
-const roles = toRef(props, 'roles')
+const contents = toRef(props, 'contents')
 const sortByVModel = useVModel(props, 'sortBy', emit)
 const sortingOrderVModel = useVModel(props, 'sortingOrder', emit)
 
@@ -52,6 +55,29 @@ const onUserDelete = async (content: Content) => {
     emit('delete-content', content)
   }
 }
+const formatTypes = (type: number) => {
+  if (type === 0) return 'No types'
+  if (type === 1) {
+    return 'Banner'
+  }
+  if (type === 2) {
+    return 'Footer'
+  }
+  if (type === 3) {
+    return 'Contact'
+  }
+}
+const formatActives = (isActive: boolean) => {
+  if (isActive === true) {
+    return 'Đang hoạt động'
+  }
+  if (isActive === false) {
+    return 'Ngưng hoạt động'
+  }
+}
+const format_date = (value: Date) => {
+  return moment(String(value)).format('DD/MM/YYYY hh:mm')
+}
 </script>
 
 <template>
@@ -59,7 +85,7 @@ const onUserDelete = async (content: Content) => {
     v-model:sort-by="sortByVModel"
     v-model:sorting-order="sortingOrderVModel"
     :columns="columns"
-    :items="roles"
+    :items="contents"
     :loading="$props.loading"
   >
     <template #cell(ID)="{ rowData }">
@@ -68,15 +94,25 @@ const onUserDelete = async (content: Content) => {
       </div>
     </template>
 
-    <template #cell(roleName)="{ rowData }">
+    <template #cell(name)="{ rowData }">
       <div class="max-w-[120px] ellipsis">
-        {{ rowData.roleName }}
+        {{ rowData.name }}
       </div>
     </template>
 
-    <template #cell(displayName)="{ rowData }">
+    <template #cell(type)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
-        {{ rowData.displayName }}
+        {{ formatTypes(rowData.type) }}
+      </div>
+    </template>
+    <template #cell(isActive)="{ rowData }">
+      <div class="ellipsis max-w-[230px]">
+        {{ formatActives(rowData.isActive) }}
+      </div>
+    </template>
+    <template #cell(creationTime)="{ rowData }">
+      <div class="ellipsis max-w-[230px]">
+        {{ format_date(rowData.creationTime) }}
       </div>
     </template>
     <template #cell(actions)="{ rowData }">

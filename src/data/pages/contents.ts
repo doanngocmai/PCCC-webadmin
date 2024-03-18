@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { sleep } from '../../services/utils'
 import { Content } from '../../pages/contents/types'
 import contentApi from '../../pages/contents/api/ContentApi'
@@ -6,11 +6,24 @@ import contentApi from '../../pages/contents/api/ContentApi'
 // export const roles = content as Content[]
 
 const roles = ref<Content[]>([])
-// Set loading state to true
-const roleList = await contentApi.getListContent(null)
-roles.value = roleList.data.data
-console.log(roleList.data.data)
 
+const fetchRoleList = async () => {
+  try {
+    const response = await contentApi.getListContent(null)
+    roles.value = response.data.data
+  } catch (error) {
+    console.error('Error fetching role list:', error)
+  }
+}
+
+onMounted(() => {
+  fetchRoleList()
+})
+
+// Function to refresh role list
+const refreshRoleList = async () => {
+  await fetchRoleList()
+}
 // Simulate API calls
 
 export type Pagination = {
@@ -77,14 +90,17 @@ export const getContents = async (filters: Partial<Filters & Pagination & Sortin
 export const addContent = async (content: Content) => {
   await sleep(1000)
   await contentApi.createContent(content)
+  await refreshRoleList()
 }
 
 export const updateContent = async (content: Content) => {
   await sleep(1000)
   await contentApi.updateContent(content)
+  await refreshRoleList()
 }
 
 export const removeContent = async (content: Content) => {
   await sleep(1000)
   await contentApi.deleteContent(content.id)
+  await refreshRoleList()
 }

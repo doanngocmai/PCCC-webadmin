@@ -4,11 +4,14 @@ import { Role } from '../types'
 import { PropType, computed, toRef } from 'vue'
 import { Pagination, Sorting } from '../../../data/pages/roles'
 import { useVModel } from '@vueuse/core'
+import moment from 'moment'
 
 const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
   { label: 'RoleName', key: 'roleName', sortable: true },
   { label: 'DisplayName', key: 'displayName', sortable: true },
+  { label: 'IsActive', key: 'isActive', sortable: true },
+  { label: 'CreationTime', key: 'creationTime', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
 
@@ -52,6 +55,17 @@ const onUserDelete = async (role: Role) => {
     emit('delete-role', role)
   }
 }
+const formatActives = (isActive: boolean) => {
+  if (isActive === true) {
+    return 'Đang hoạt động'
+  }
+  if (isActive === false) {
+    return 'Ngưng hoạt động'
+  }
+}
+const format_date = (value: Date) => {
+  return moment(String(value)).format('DD/MM/YYYY hh:mm')
+}
 </script>
 
 <template>
@@ -77,6 +91,16 @@ const onUserDelete = async (role: Role) => {
     <template #cell(displayName)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
         {{ rowData.displayName }}
+      </div>
+    </template>
+    <template #cell(isActive)="{ rowData }">
+      <div class="ellipsis max-w-[230px]">
+        {{ formatActives(rowData.isActive) }}
+      </div>
+    </template>
+    <template #cell(creationTime)="{ rowData }">
+      <div class="ellipsis max-w-[230px]">
+        {{ format_date(rowData.creationTime) }}
       </div>
     </template>
     <template #cell(actions)="{ rowData }">
