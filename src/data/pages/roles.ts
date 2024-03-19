@@ -11,6 +11,7 @@ const fetchRoleList = async () => {
   try {
     const response = await roleApi.getListRole(null)
     roles.value = response.data.data
+    console.log(response.data.data)
   } catch (error) {
     console.error('Error fetching content list:', error)
   }
@@ -34,16 +35,13 @@ export type Filters = {
 }
 
 const getSortItem = (obj: any, sortBy: string) => {
-  // if (sortBy === 'projects') {
-  //   return obj.projects.map((project: any) => project.project_name).join(', ')
-  // }
   return obj[sortBy]
 }
 
 export const getRoles = async (filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
-  await fetchRoleList()
   const { isActive, search, sortBy, sortingOrder } = filters
+  await fetchRoleList()
   const filteredRoles = roles
   console.log(roles)
 
@@ -84,7 +82,8 @@ export const getRoles = async (filters: Partial<Filters & Pagination & Sorting>)
 
 export const addRole = async (role: Role) => {
   await sleep(1000)
-  await roleApi.createRole(role)
+  const res = await roleApi.createRole(role)
+  console.log(res)
   await fetchRoleList()
 }
 

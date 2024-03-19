@@ -27,13 +27,15 @@ const { init: notify } = useToast()
 const onContentSaved = async (content: Content) => {
   if (contentToEdit.value) {
     console.log(contentToEdit.value)
-    await contentsApi.update(content)
+    const res = await contentsApi.update(content)
+    console.log(res)
     notify({
       message: `${content.name} has been updated`,
       color: 'success',
     })
   } else {
-    contentsApi.add(content)
+    const response = await contentsApi.add(content)
+    console.log(response)
     notify({
       message: `${content.name} has been created`,
       color: 'success',

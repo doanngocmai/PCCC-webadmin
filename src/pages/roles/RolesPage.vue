@@ -42,17 +42,10 @@ const onRoleSaved = async (role: Role) => {
 }
 
 const onRoleDelete = async (role: Role) => {
-  const res = await rolesApi.remove(role)
-  console.log(res)
-  // if (res.value == 200) {
-  //   notify({
-  //     message: `${role.roleName} has been deleted`,
-  //     color: 'success',
-  //   })
-  // }
+  await rolesApi.remove(role)
   notify({
-    message: `${role.roleName} updted erorr`,
-    color: 'error',
+    message: `${role.roleName} has been deleted`,
+    color: 'success',
   })
 }
 

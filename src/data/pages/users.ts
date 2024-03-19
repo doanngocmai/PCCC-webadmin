@@ -16,7 +16,7 @@ const getUserProjects = (userId: number | string) => {
       status: project.status as Project['status'],
     }))
 }
-
+console.log(users)
 // Simulate API calls
 
 export type Pagination = {
@@ -47,6 +47,8 @@ export const getUsers = async (filters: Partial<Filters & Pagination & Sorting>)
   await sleep(1000)
   const { isActive, search, sortBy, sortingOrder } = filters
   let filteredUsers = users
+  console.log(users)
+  console.log(filters)
 
   filteredUsers = filteredUsers.filter((user) => user.active === isActive)
 

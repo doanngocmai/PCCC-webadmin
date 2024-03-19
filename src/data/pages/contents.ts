@@ -83,7 +83,8 @@ export const getContents = async (filters: Partial<Filters & Pagination & Sortin
 
 export const addContent = async (content: Content) => {
   await sleep(1000)
-  await contentApi.createContent(content)
+  const res = await contentApi.createContent(content)
+  console.log(res)
   await fetchContentList()
 }
 
