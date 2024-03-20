@@ -7,10 +7,12 @@ import roleApi from '../../pages/roles/api/RoleApi'
 
 const roles = ref<Role[]>([])
 
-const fetchRoleList = async () => {
+const fetchRoleList = async (filters: Partial<Filters & Pagination & Sorting>) => {
   try {
-    const response = await roleApi.getListRole(null)
+    console.log(filters)
+    const response = await roleApi.getListRole(filters)
     roles.value = response.data.data
+    console.log(filters)
     console.log(response.data.data)
   } catch (error) {
     console.error('Error fetching content list:', error)
@@ -41,7 +43,7 @@ const getSortItem = (obj: any, sortBy: string) => {
 export const getRoles = async (filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const { isActive, search, sortBy, sortingOrder } = filters
-  await fetchRoleList()
+  await fetchRoleList(filters)
   const filteredRoles = roles
   console.log(roles)
 
@@ -80,21 +82,21 @@ export const getRoles = async (filters: Partial<Filters & Pagination & Sorting>)
   }
 }
 
-export const addRole = async (role: Role) => {
+export const addRole = async (role: Role, filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const res = await roleApi.createRole(role)
   console.log(res)
-  await fetchRoleList()
+  await fetchRoleList(filters)
 }
 
-export const updateRole = async (role: Role) => {
+export const updateRole = async (role: Role, filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   await roleApi.updateRole(role)
-  await fetchRoleList()
+  await fetchRoleList(filters)
 }
 
-export const removeRole = async (role: Role) => {
+export const removeRole = async (role: Role, filters: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   await roleApi.deleteRole(role.id)
-  await fetchRoleList()
+  await fetchRoleList(filters)
 }
