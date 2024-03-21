@@ -69,6 +69,8 @@ export const getContents = async (filters: Partial<Filters & Pagination & Sortin
       return 0
     })
   }
+  console.log(filteredContents)
+  console.log(filteredContents.value)
 
   const { page = 1, perPage = 10 } = filters || {}
   return {

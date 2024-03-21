@@ -24,7 +24,7 @@ export const useContents = (options?: {
   const contents = ref<Content[]>([])
 
   const { filters = makeFiltersRef(), sorting = makeSortingRef(), pagination = makePaginationRef() } = options || {}
-
+  // Định nghĩa hàm fetch để tải dữ liệu từ API sử dụng các filters, sorting và pagination hiện tại.
   const fetch = async () => {
     isLoading.value = true
     const { data, pagination: newPagination } = await getContents({
@@ -33,7 +33,6 @@ export const useContents = (options?: {
       ...unref(pagination),
     })
     contents.value = data
-    console.log(data)
 
     ignoreUpdates(() => {
       pagination.value = newPagination
@@ -41,9 +40,9 @@ export const useContents = (options?: {
 
     isLoading.value = false
   }
-
+  //Sử dụng watchIgnorable để theo dõi sự thay đổi của pagination và sorting, và tự động gọi hàm fetch() khi có sự thay đổi
   const { ignoreUpdates } = watchIgnorable([pagination, sorting], fetch, { deep: true })
-
+  // Sử dụng watch để theo dõi sự thay đổi của filters, và reset pagination về trang đầu tiên khi có sự thay đổi, sau đó gọi hàm fetch()
   watch(
     filters,
     () => {
