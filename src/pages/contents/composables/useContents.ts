@@ -10,10 +10,13 @@ import {
 } from '../../../data/pages/contents'
 import { Content } from '../types'
 import { watchIgnorable } from '@vueuse/core'
+import { useToast } from 'vuestic-ui'
 
 const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 10, total: 0 })
 const makeSortingRef = () => ref<Sorting>({ sortBy: 'id', sortingOrder: null })
 const makeFiltersRef = () => ref<Partial<Filters>>({ isActive: true, search: '' })
+
+const { notify } = useToast()
 
 export const useContents = (options?: {
   pagination?: Ref<Pagination>
@@ -74,10 +77,19 @@ export const useContents = (options?: {
     },
 
     async update(content: Content) {
-      isLoading.value = true
-      await updateContent(content)
-      await fetch()
-      isLoading.value = false
+      try {
+        isLoading.value = true
+        const { res } = await updateContent(content)
+        if (!!res && res.status === 1) {
+          notify({
+            message: `${content.name} has been updated`,
+            color: 'success',
+          })
+        }
+      } finally {
+        await fetch()
+        isLoading.value = false
+      }
     },
 
     async remove(content: Content) {

@@ -21,6 +21,7 @@ const defaultNewContent: Content = {
   description: '',
   color: '',
   link: '',
+  image: '',
   icon: '',
   type: 0,
   isActive: true,
@@ -29,11 +30,11 @@ const defaultNewContent: Content = {
 const newContent = ref<Content>({ ...defaultNewContent })
 
 const contentSelectOptions: { text: Capitalize<TextTypeContent>; value: TypeContent }[] = [
-  { text: 'Banner', value: '1' },
-  { text: 'Footer', value: '2' },
-  { text: 'Contact', value: '3' },
+  { text: 'Please Choose Type', value: 0 },
+  { text: 'Banner', value: 1 },
+  { text: 'Footer', value: 2 },
+  { text: 'Contact', value: 3 },
 ]
-
 const isFormHasUnsavedChanges = computed(() => {
   return Object.keys(newContent.value).some((key) => {
     if (key === 'avatar' || key === 'projects') {
@@ -88,9 +89,10 @@ const onSave = () => {
           label="Type"
           class="w-full"
           :options="contentSelectOptions"
-          :rules="[validators.required]"
+          :rules="[validators.required, (v) => newContent.type !== 0 || 'Please choose Type']"
           name="type"
           value-by="value"
+          option-label="text"
         />
         <VaInput
           v-model="newContent.name"
@@ -102,11 +104,29 @@ const onSave = () => {
       </div>
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput v-model="newContent.color" label="Color" class="w-full sm:w-1/2" name="color" />
-        <VaInput v-model="newContent.link" label="Link" class="w-full sm:w-1/2" name="link" />
-      </div>
-      <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput v-model="newContent.icon" label="Icon" class="w-full sm:w-1/2" name="icon" />
       </div>
+      <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <VaInput v-model="newContent.link" label="Link" class="w-full" name="link" />
+      </div>
+      <!-- <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <VaFileUpload
+          v-model="newContent.image"
+          type="single"
+          hide-file-list
+          class="self-stretch justify-start items-center gap-4 inline-flex"
+        >
+          <VaButton preset="primary" size="small">Add image</VaButton>
+          <VaButton
+            v-if="avatar"
+            preset="primary"
+            color="danger"
+            size="small"
+            icon="delete" 
+            @click.stop="avatar = undefined"
+          />
+        </VaFileUpload>
+      </div> -->
       <div class="flex items-center w-1/2 mt-4">
         <VaCheckbox v-model="newContent.isActive" label="IsActive" class="w-full" name="active" />
       </div>

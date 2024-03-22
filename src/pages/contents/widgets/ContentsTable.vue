@@ -140,7 +140,7 @@ const format_date = (value: Date) => {
     <div>
       <b>{{ $props.pagination.total }} results.</b>
       Results per page
-      <VaSelect v-model="$props.pagination.perPage" class="!w-20" :options="[10, 50, 100]" />
+      <VaSelect v-model="$props.pagination.perPage" class="!w-20" :options="[2, 10, 50, 100]" />
     </div>
 
     <div v-if="totalPages > 1" class="flex">
