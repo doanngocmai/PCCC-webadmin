@@ -40,6 +40,13 @@ export default {
       },
     },
     {
+      name: 'accounts',
+      displayName: 'menu.accounts',
+      meta: {
+        icon: 'topic ',
+      },
+    },
+    {
       name: 'projects',
       displayName: 'menu.projects',
       meta: {
