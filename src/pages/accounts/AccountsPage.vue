@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UsersTable from './widgets/UsersTable.vue'
-import EditUserForm from './widgets/EditUserForm.vue'
-import { User } from './types'
-import { useUsers } from '../accounts/composables/useAccounts'
+import { User } from './typeAccounts'
+import { useUsers } from './composables/useAccounts'
 import { useModal, useToast } from 'vuestic-ui'
+import AccountsTable from './widgets/AccountsTable.vue'
+import EditAccountForm from './widgets/EditAccountForm.vue'
 
 const doShowEditUserModal = ref(false)
 
@@ -28,13 +28,13 @@ const onUserSaved = async (user: User) => {
   if (userToEdit.value) {
     await usersApi.update(user)
     notify({
-      message: `${user.fullname} has been updated`,
+      message: `${user.fullName} has been updated`,
       color: 'success',
     })
   } else {
     usersApi.add(user)
     notify({
-      message: `${user.fullname} has been created`,
+      message: `${user.fullName} has been created`,
       color: 'success',
     })
   }
@@ -43,7 +43,7 @@ const onUserSaved = async (user: User) => {
 const onUserDelete = async (user: User) => {
   await usersApi.remove(user)
   notify({
-    message: `${user.fullname} has been deleted`,
+    message: `${user.userName} has been deleted`,
     color: 'success',
   })
 }
@@ -80,8 +80,8 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
             color="background-element"
             border-color="background-element"
             :options="[
-              { label: 'Active', value: true },
-              { label: 'Inactive', value: false },
+              { label: 'Active', value: 1 },
+              { label: 'Inactive', value: 0 },
             ]"
           />
           <VaInput v-model="filters.search" placeholder="Search">
@@ -93,7 +93,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
         <VaButton @click="showAddUserModal">Add User</VaButton>
       </div>
 
-      <UsersTable
+      <AccountsTable
         v-model:sort-by="sorting.sortBy"
         v-model:sorting-order="sorting.sortingOrder"
         :users="users"
@@ -115,7 +115,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
     :before-cancel="beforeEditFormModalClose"
   >
     <h1 class="va-h5">{{ userToEdit ? 'Edit user' : 'Add user' }}</h1>
-    <EditUserForm
+    <EditAccountForm
       ref="editFormRef"
       :user="userToEdit"
       :save-button-label="userToEdit ? 'Save' : 'Add'"
@@ -129,4 +129,4 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
     />
   </VaModal>
 </template>
-./composables/useAccounts
+./composables/useAccounts./widgets/EditAccountForm.vue./typeAccounts

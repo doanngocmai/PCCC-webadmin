@@ -1,6 +1,6 @@
 import { Ref, ref, unref, watch } from 'vue'
 import {
-  getUsers,
+  getAccounts,
   type Filters,
   Pagination,
   Sorting,
@@ -8,13 +8,13 @@ import {
   updateUser,
   removeUser,
 } from '../../../data/pages/accounts'
-import { User } from '../types'
+import { User } from '../typeAccounts'
 import { watchIgnorable } from '@vueuse/core'
 import { useToast } from 'vuestic-ui'
 
 const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 10, total: 0 })
 const makeSortingRef = () => ref<Sorting>({ sortBy: 'id', sortingOrder: null })
-const makeFiltersRef = () => ref<Partial<Filters>>({ isActive: true, search: '' })
+const makeFiltersRef = () => ref<Partial<Filters>>({ isActive: 1, search: '' })
 
 const { notify } = useToast()
 
@@ -30,7 +30,7 @@ export const useUsers = (options?: {
   // Định nghĩa hàm fetch để tải dữ liệu từ API sử dụng các filters, sorting và pagination hiện tại.
   const fetch = async () => {
     isLoading.value = true
-    const { data, pagination: newPagination } = await getUsers({
+    const { data, pagination: newPagination } = await getAccounts({
       ...unref(filters),
       ...unref(sorting),
       ...unref(pagination),
@@ -82,7 +82,7 @@ export const useUsers = (options?: {
         const { res } = await updateUser(user)
         if (!!res && res.status === 1) {
           notify({
-            message: `${user.username} has been updated`,
+            message: `${user.userName} has been updated`,
             color: 'success',
           })
         }

@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { sleep } from '../../services/utils'
-import { User } from '../../pages/accounts/types'
-import userApi from '../../pages/accounts/api/UserApi'
+import { User } from '../../pages/accounts/typeAccounts'
+import userApi from '../../pages/accounts/api/accountApi'
 import { useToast } from 'vuestic-ui'
 
 const { notify } = useToast()
@@ -18,7 +18,7 @@ export type Sorting = {
 }
 
 export type Filters = {
-  isActive: boolean
+  isActive: number
   search: string
 }
 
@@ -26,7 +26,7 @@ const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
 
-export const getUsers = async (filters?: Partial<Filters & Pagination & Sorting>) => {
+export const getAccounts = async (filters?: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const number = ref(0)
   const users = ref<User[]>([])
@@ -40,8 +40,8 @@ export const getUsers = async (filters?: Partial<Filters & Pagination & Sorting>
     users.value = users.value.filter((user) => user.isActive === isActive)
 
     if (search) {
-      users.value = users.value.filter((user) => user.username.toLowerCase().includes(search.toLowerCase()))
-      users.value = users.value.filter((user) => user.fullname.toLowerCase().includes(search.toLowerCase()))
+      users.value = users.value.filter((user) => user.userName.toLowerCase().includes(search.toLowerCase()))
+      users.value = users.value.filter((user) => user.fullName.toLowerCase().includes(search.toLowerCase()))
     }
 
     users.value = users.value.map((user) => ({ ...user }))
@@ -78,7 +78,7 @@ export const addUser = async (user: User) => {
   await sleep(1000)
   const res = await userApi.createUser(user)
   console.log(res)
-  await getUsers()
+  await getAccounts()
 }
 export const updateUser = async (user: User) => {
   try {
@@ -87,7 +87,7 @@ export const updateUser = async (user: User) => {
     if (!!res && res.status === 1) {
       return { res }
     }
-    await getUsers() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    await getAccounts() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
     return { error: 'Failed to update user' }
   } catch (error: any) {
     if (error) {
@@ -114,5 +114,5 @@ export const updateUser = async (user: User) => {
 export const removeUser = async (user: User) => {
   await sleep(1000)
   await userApi.deleteUser(user.id)
-  await getUsers()
+  await getAccounts()
 }

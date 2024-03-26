@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
-import { User } from '../types'
+import { User } from '../typeAccounts'
 import { PropType, computed, toRef } from 'vue'
 import { Pagination, Sorting } from '../../../data/pages/users'
 import { useVModel } from '@vueuse/core'
 
 const columns = defineVaDataTableColumns([
-  { label: 'Full Name', key: 'fullname', sortable: true },
+  { label: 'Username', key: 'userName', sortable: true },
+  { label: 'Full Name', key: 'fullName', sortable: true },
   { label: 'Email', key: 'email', sortable: true },
   { label: 'Phone', key: 'phone', sortable: true },
-  { label: 'Username', key: 'username', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
 
@@ -42,7 +42,7 @@ const { confirm } = useModal()
 const onUserDelete = async (user: User) => {
   const agreed = await confirm({
     title: 'Delete user',
-    message: `Are you sure you want to delete ${user.fullname}?`,
+    message: `Are you sure you want to delete ${user.fullName}?`,
     okText: 'Delete',
     cancelText: 'Cancel',
     size: 'small',
@@ -63,16 +63,16 @@ const onUserDelete = async (user: User) => {
     :items="users"
     :loading="$props.loading"
   >
-    <template #cell(fullname)="{ rowData }">
-      <div class="flex items-center gap-2 max-w-[230px] ellipsis">
-        <UserAvatar :user="rowData as User" size="small" />
-        {{ rowData.fullname }}
+    <template #cell(userName)="{ rowData }">
+      <div class="max-w-[120px] ellipsis">
+        {{ rowData.userName }}
       </div>
     </template>
 
-    <template #cell(username)="{ rowData }">
-      <div class="max-w-[120px] ellipsis">
-        {{ rowData.username }}
+    <template #cell(fullName)="{ rowData }">
+      <div class="flex items-center gap-2 max-w-[230px] ellipsis">
+        <UserAvatar :user="rowData as User" size="small" />
+        {{ rowData.fullName }}
       </div>
     </template>
 
@@ -151,3 +151,4 @@ const onUserDelete = async (user: User) => {
   }
 }
 </style>
+../typeAccounts

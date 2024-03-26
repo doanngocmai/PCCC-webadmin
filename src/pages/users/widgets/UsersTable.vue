@@ -89,16 +89,16 @@ const formatProjectNames = (projects: Project[]) => {
     :items="users"
     :loading="$props.loading"
   >
-    <template #cell(fullname)="{ rowData }">
+    <template #cell(fullName)="{ rowData }">
       <div class="flex items-center gap-2 max-w-[230px] ellipsis">
         <UserAvatar :user="rowData as User" size="small" />
-        {{ rowData.fullname }}
+        {{ rowData.fullName }}
       </div>
     </template>
 
-    <template #cell(username)="{ rowData }">
+    <template #cell(userName)="{ rowData }">
       <div class="max-w-[120px] ellipsis">
-        {{ rowData.username }}
+        {{ rowData.userName }}
       </div>
     </template>
 

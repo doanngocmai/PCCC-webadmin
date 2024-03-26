@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { PropType, computed, ref, watch } from 'vue'
 import { useForm } from 'vuestic-ui'
-import { User } from '../types'
 import { validators } from '../../../services/utils'
+import { User } from '../typeAccounts'
 
 const props = defineProps({
   user: {
@@ -17,16 +17,23 @@ const props = defineProps({
 
 const defaultNewUser: User = {
   id: -1,
-  fullname: '',
-  username: '',
+  fullName: '',
   phone: '',
-  notes: '',
   email: '',
-  role: 0,
-  isActive: true,
+  address: '',
+  userName: '',
+  password: '',
+  amount: 0,
+  isActive: 1,
+  sex: true,
 }
 
 const newUser = ref<User>({ ...defaultNewUser })
+
+const userRadioOptions = [
+  { text: 'Female', value: true },
+  { text: 'Male', value: false },
+]
 
 const isFormHasUnsavedChanges = computed(() => {
   return Object.keys(newUser.value).some((key) => {
@@ -56,8 +63,6 @@ watch(
   { immediate: true },
 )
 
-const avatar = ref<File>()
-
 const form = useForm('add-user-form')
 
 const emit = defineEmits(['close', 'save'])
@@ -71,49 +76,24 @@ const onSave = () => {
 
 <template>
   <VaForm v-slot="{ isValid }" ref="add-user-form" class="flex-col justify-start items-start gap-4 inline-flex w-full">
-    <VaFileUpload
-      v-model="avatar"
-      type="single"
-      hide-file-list
-      class="self-stretch justify-start items-center gap-4 inline-flex"
-    >
-      <UserAvatar :user="newUser" size="large" />
-      <VaButton preset="primary" size="small">Add image</VaButton>
-      <VaButton
-        v-if="avatar"
-        preset="primary"
-        color="danger"
-        size="small"
-        icon="delete"
-        class="z-10"
-        @click.stop="avatar = undefined"
-      />
-    </VaFileUpload>
     <div class="self-stretch flex-col justify-start items-start gap-4 flex">
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput
-          v-model="newUser.fullname"
-          label="Full name"
-          class="w-full sm:w-1/2"
-          :rules="[validators.required]"
-          name="fullname"
-        />
-        <VaInput
-          v-model="newUser.username"
+          v-model="newUser.userName"
           label="Username"
           class="w-full sm:w-1/2"
           :rules="[validators.required]"
           name="username"
         />
+        <VaInput
+          v-model="newUser.fullName"
+          label="Full name"
+          class="w-full sm:w-1/2"
+          :rules="[validators.required]"
+          name="fullname"
+        />
       </div>
       <div class="flex gap-4 flex-col sm:flex-row w-full">
-        <VaInput
-          v-model="newUser.email"
-          label="Email"
-          class="w-full sm:w-1/2"
-          :rules="[validators.required, validators.email]"
-          name="email"
-        />
         <VaInput
           v-model="newUser.phone"
           label="Phone"
@@ -121,15 +101,22 @@ const onSave = () => {
           :rules="[validators.required]"
           name="phone"
         />
+        <VaInput
+          v-model="newUser.email"
+          label="Email"
+          class="w-full sm:w-1/2"
+          :rules="[validators.required, validators.email]"
+          name="email"
+        />
       </div>
-
+      <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <VaRadio v-model="newUser.sex" label="Sex" :options="userRadioOptions" />
+      </div>
       <div class="flex gap-4 w-full">
         <div class="flex items-center w-1/2 mt-4">
           <VaCheckbox v-model="newUser.isActive" label="IsActive" class="w-full" name="isActive" />
         </div>
       </div>
-
-      <VaTextarea v-model="newUser.notes" label="Notes" class="w-full" name="notes" />
       <div class="flex gap-2 flex-col-reverse items-stretch justify-end w-full sm:flex-row sm:items-center">
         <VaButton preset="secondary" color="secondary" @click="$emit('close')">Cancel</VaButton>
         <VaButton :disabled="!isValid" @click="onSave">{{ saveButtonLabel }}</VaButton>
@@ -137,3 +124,4 @@ const onSave = () => {
     </div>
   </VaForm>
 </template>
+../typeAccounts
