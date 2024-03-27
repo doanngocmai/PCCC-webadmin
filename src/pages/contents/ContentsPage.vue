@@ -24,19 +24,27 @@ const showAddContentModal = () => {
 
 const { init: notify } = useToast()
 
+const hasError = ref(false)
 const onContentSaved = async (content: Content) => {
   if (contentToEdit.value) {
-    await contentsApi.update(content)
+    try {
+      await contentsApi.update(content)
+      hasError.value = false
+    } catch (error) {
+      hasError.value = true
+    }
   } else {
-    const response = await contentsApi.add(content)
-    console.log(response)
-    notify({
-      message: `${content.name} has been created`,
-      color: 'success',
-    })
+    try {
+      await contentsApi.add(content)
+      hasError.value = false
+    } catch (error) {
+      hasError.value = true
+    }
+  }
+  if (hasError.value) {
+    doShowEditContentModal.value = true
   }
 }
-
 const onContentDelete = async (content: Content) => {
   const res = await contentsApi.remove(content)
   console.log(res)

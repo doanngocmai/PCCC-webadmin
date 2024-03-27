@@ -71,10 +71,34 @@ export const getContents = async (filters?: Partial<Filters & Pagination & Sorti
 }
 
 export const addContent = async (content: Content) => {
-  await sleep(1000)
-  const res = await contentApi.createContent(content)
-  console.log(res)
-  await getContents()
+  try {
+    await sleep(1000) // Giả lập thời gian chờ
+    const res = await contentApi.createContent(content)
+    if (!!res && res.status === 1) {
+      return { res }
+    }
+    await getContents() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    return { error: 'Failed to create content' }
+  } catch (error: any) {
+    if (error) {
+      if (error.response && error.response.data) {
+        if (error.response.data.code === 1) {
+          notify({
+            message: `${error.response.data.message}`,
+            color: 'danger',
+          })
+        } else {
+          console.error('Unhandled error:', error)
+          // Xử lý các lỗi khác
+        }
+      }
+    } else {
+      console.error('Unhandled error:', error)
+    }
+    // Xử lý lỗi không có phản hồi từ backend
+
+    return { error: error.message || 'Unknown error occurred' }
+  }
 }
 
 export const updateContent = async (content: Content) => {
@@ -89,7 +113,12 @@ export const updateContent = async (content: Content) => {
   } catch (error: any) {
     if (error) {
       if (error.response && error.response.data) {
-        if (error.response.data.code === 2) {
+        if (error.response.data.code === 1) {
+          notify({
+            message: `${error.response.data.message}`,
+            color: 'danger',
+          })
+        } else if (error.response.data.code === 2) {
           notify({
             message: `${error.response.data.message}`,
             color: 'danger',

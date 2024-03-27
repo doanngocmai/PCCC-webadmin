@@ -70,10 +70,19 @@ export const useContents = (options?: {
     fetch,
 
     async add(content: Content) {
-      isLoading.value = true
-      await addContent(content)
-      await fetch()
-      isLoading.value = false
+      try {
+        isLoading.value = true
+        const { res } = await addContent(content)
+        if (!!res && res.status === 1) {
+          notify({
+            message: `${content.name} has been created`,
+            color: 'success',
+          })
+        }
+      } finally {
+        await fetch()
+        isLoading.value = false
+      }
     },
 
     async update(content: Content) {

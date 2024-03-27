@@ -73,12 +73,35 @@ export const getAccounts = async (filters?: Partial<Filters & Pagination & Sorti
     },
   }
 }
+export const addUser = async (content: Content) => {
+  try {
+    await sleep(1000) // Giả lập thời gian chờ
+    const res = await userApi.createUser(content)
+    if (!!res && res.status === 1) {
+      return { res }
+    }
+    await getAccounts() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    return { error: 'Failed to create content' }
+  } catch (error: any) {
+    if (error) {
+      if (error.response && error.response.data) {
+        if (error.response.data.code === 3) {
+          notify({
+            message: `${error.response.data.message}`,
+            color: 'danger',
+          })
+        } else {
+          console.error('Unhandled error:', error)
+          // Xử lý các lỗi khác
+        }
+      }
+    } else {
+      console.error('Unhandled error:', error)
+    }
+    // Xử lý lỗi không có phản hồi từ backend
 
-export const addUser = async (user: User) => {
-  await sleep(1000)
-  const res = await userApi.createUser(user)
-  console.log(res)
-  await getAccounts()
+    return { error: error.message || 'Unknown error occurred' }
+  }
 }
 export const updateUser = async (user: User) => {
   try {
