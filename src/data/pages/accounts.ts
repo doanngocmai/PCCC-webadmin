@@ -33,7 +33,6 @@ export const getAccounts = async (filters?: Partial<Filters & Pagination & Sorti
   const { page = 1, perPage = 10, isActive, search, sortBy, sortingOrder } = filters || {}
 
   try {
-    console.log(filters)
     const response = await userApi.getListUser(filters)
     number.value = response.data.totalItemCount
     users.value = response.data.data
@@ -59,7 +58,6 @@ export const getAccounts = async (filters?: Partial<Filters & Pagination & Sorti
         return 0
       })
     }
-    console.log(users.value)
   } catch (error) {
     console.error('Error fetching content list:', error)
   }
@@ -73,62 +71,67 @@ export const getAccounts = async (filters?: Partial<Filters & Pagination & Sorti
     },
   }
 }
-export const addUser = async (content: Content) => {
+const hasError = ref(false)
+
+export const addUser = async (user: User) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
-    const res = await userApi.createUser(content)
+    hasError.value = false
+    const res = await userApi.createUser(user)
     if (!!res && res.status === 1) {
-      return { res }
+      return { res, hasError }
     }
     await getAccounts() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
-    return { error: 'Failed to create content' }
+    return { error: 'Failed to create user' }
   } catch (error: any) {
-    if (error) {
-      if (error.response && error.response.data) {
-        if (error.response.data.code === 3) {
-          notify({
-            message: `${error.response.data.message}`,
-            color: 'danger',
-          })
-        } else {
-          console.error('Unhandled error:', error)
-          // Xử lý các lỗi khác
-        }
-      }
+    hasError.value = true
+
+    if (error?.response?.data?.code === 3) {
+      notify({
+        message: `${error.response.data.message}`,
+        color: 'danger',
+      })
+      return { hasError }
     } else {
       console.error('Unhandled error:', error)
+      notify({
+        message: `The system is maintenance`,
+        color: 'danger',
+      })
     }
     // Xử lý lỗi không có phản hồi từ backend
-
     return { error: error.message || 'Unknown error occurred' }
   }
 }
+
 export const updateUser = async (user: User) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
+    hasError.value = false
     const res = await userApi.updateUser(user)
+
     if (!!res && res.status === 1) {
-      return { res }
+      return { res, hasError }
     }
+
     await getAccounts() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
     return { error: 'Failed to update user' }
   } catch (error: any) {
-    if (error) {
-      if (error.response && error.response.data) {
-        if (error.response.data.code === 2) {
-          notify({
-            message: `${error.response.data.message}`,
-            color: 'danger',
-          })
-        } else {
-          console.error('Unhandled error:', error)
-          // Xử lý các lỗi khác
-        }
-      }
+    hasError.value = true
+
+    if (error?.response?.data?.code === 3) {
+      notify({
+        message: `${error.response.data.message}`,
+        color: 'danger',
+      })
+      return { hasError }
     } else {
       console.error('Unhandled error:', error)
+      notify({
+        message: `The system is maintenance`,
+        color: 'danger',
+      })
     }
-    // Xử lý lỗi không có phản hồi từ backend
 
     return { error: error.message || 'Unknown error occurred' }
   }

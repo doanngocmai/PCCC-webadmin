@@ -70,21 +70,42 @@ export const useUsers = (options?: {
     fetch,
 
     async add(user: User) {
-      isLoading.value = true
-      await addUser(user)
-      await fetch()
-      isLoading.value = false
+      try {
+        isLoading.value = true
+        const { res, hasError } = await addUser(user)
+        if (!!res && res.status === 1) {
+          notify({
+            message: `${user.userName} has been created`,
+            color: 'success',
+          })
+          return {
+            hasError,
+          }
+        }
+        return {
+          hasError,
+        }
+      } finally {
+        await fetch()
+        isLoading.value = false
+      }
     },
 
     async update(user: User) {
       try {
         isLoading.value = true
-        const { res } = await updateUser(user)
+        const { res, hasError } = await updateUser(user)
         if (!!res && res.status === 1) {
           notify({
             message: `${user.userName} has been updated`,
             color: 'success',
           })
+          return {
+            hasError,
+          }
+        }
+        return {
+          hasError,
         }
       } finally {
         await fetch()

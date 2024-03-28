@@ -26,17 +26,11 @@ const { init: notify } = useToast()
 
 const onUserSaved = async (user: User) => {
   if (userToEdit.value) {
-    await usersApi.update(user)
-    notify({
-      message: `${user.fullName} has been updated`,
-      color: 'success',
-    })
+    const { hasError } = await usersApi.update(user)
+    doShowEditUserModal.value = hasError?.value === true
   } else {
-    usersApi.add(user)
-    notify({
-      message: `${user.fullName} has been created`,
-      color: 'success',
-    })
+    const { hasError } = await usersApi.add(user)
+    doShowEditUserModal.value = hasError?.value === true
   }
 }
 
@@ -106,7 +100,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
   </VaCard>
 
   <VaModal
-    v-slot="{ cancel, ok }"
+    v-slot="{ cancel }"
     v-model="doShowEditUserModal"
     size="small"
     mobile-fullscreen
@@ -123,7 +117,6 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
       @save="
         (user) => {
           onUserSaved(user)
-          ok()
         }
       "
     />

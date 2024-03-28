@@ -63,8 +63,6 @@ watch(
   { immediate: true },
 )
 
-console.log(newUser)
-
 const form = useForm('add-user-form')
 
 const emit = defineEmits(['close', 'save'])
