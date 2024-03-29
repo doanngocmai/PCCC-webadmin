@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { sleep } from '../../services/utils'
-import { Content } from '../../pages/contents/types'
-import contentApi from '../../pages/contents/api/ContentApi'
+import { New } from '../../pages/news/types'
+import newApi from '../../pages/news/api/NewApi'
 import { useToast } from 'vuestic-ui'
 
 const { notify } = useToast()
@@ -12,7 +12,7 @@ export type Pagination = {
 }
 
 export type Sorting = {
-  sortBy: keyof Content | undefined
+  sortBy: keyof New | undefined
   sortingOrder: 'asc' | 'desc' | null
 }
 
@@ -25,26 +25,26 @@ const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
 
-export const getContents = async (filters?: Partial<Filters & Pagination & Sorting>) => {
+export const getNews = async (filters?: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const number = ref(0)
-  const contents = ref<Content[]>([])
+  const news = ref<New[]>([])
   const { page = 1, perPage = 10, isActive, search, sortBy, sortingOrder } = filters || {}
 
   try {
-    const response = await contentApi.getListContent(filters)
+    const response = await newApi.getListNew(filters)
     number.value = response.data.totalItemCount
-    contents.value = response.data.data
-    contents.value = contents.value.filter((content) => content.isActive === isActive)
+    news.value = response.data.data
+    news.value = news.value.filter((item) => item.isActive === isActive)
 
     if (search) {
-      contents.value = contents.value.filter((content) => content.name.toLowerCase().includes(search.toLowerCase()))
+      news.value = news.value.filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
     }
 
-    contents.value = contents.value.map((content) => ({ ...content }))
+    news.value = news.value.map((item) => ({ ...item }))
 
     if (sortBy && sortingOrder) {
-      contents.value = contents.value.sort((a, b) => {
+      news.value = news.value.sort((a, b) => {
         const first = getSortItem(a, sortBy)
         const second = getSortItem(b, sortBy)
         if (first > second) {
@@ -57,11 +57,11 @@ export const getContents = async (filters?: Partial<Filters & Pagination & Sorti
       })
     }
   } catch (error) {
-    console.error('Error fetching content list:', error)
+    console.error('Error fetching new list:', error)
   }
 
   return {
-    data: contents.value,
+    data: news.value,
     pagination: {
       page,
       perPage,
@@ -72,16 +72,16 @@ export const getContents = async (filters?: Partial<Filters & Pagination & Sorti
 
 const hasError = ref(false)
 
-export const addContent = async (content: Content) => {
+export const addContent = async (item: New) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
-    const res = await contentApi.createContent(content)
+    const res = await newApi.createNew(item)
     if (!!res && res.status === 1) {
       return { res, hasError }
     }
-    await getContents() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
-    return { error: 'Failed to create content' }
+    await getNews() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    return { error: 'Failed to create new' }
   } catch (error: any) {
     hasError.value = true
 
@@ -102,18 +102,18 @@ export const addContent = async (content: Content) => {
     return { error: error.message || 'Unknown error occurred' }
   }
 }
-export const updateContent = async (content: Content) => {
+export const updateContent = async (item: New) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
-    const res = await contentApi.updateContent(content)
+    const res = await newApi.updateNew(item)
 
     if (!!res && res.status === 1) {
       return { res, hasError }
     }
 
-    await getContents() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
-    return { error: 'Failed to update content' }
+    await getNews() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    return { error: 'Failed to update new' }
   } catch (error: any) {
     hasError.value = true
 
@@ -135,9 +135,9 @@ export const updateContent = async (content: Content) => {
   }
 }
 
-export const removeContent = async (content: Content) => {
+export const removeContent = async (item: New) => {
   await sleep(1000)
-  const res = await contentApi.deleteContent(content.id)
+  const res = await newApi.deleteNew(item.id)
   console.log(res)
-  await getContents()
+  await getNews()
 }

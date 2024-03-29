@@ -40,6 +40,13 @@ export default {
       },
     },
     {
+      name: 'news',
+      displayName: 'menu.news',
+      meta: {
+        icon: 'event_note',
+      },
+    },
+    {
       name: 'accounts',
       displayName: 'menu.accounts',
       meta: {

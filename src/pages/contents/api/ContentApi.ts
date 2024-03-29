@@ -1,6 +1,6 @@
 import { ApiClient } from '../../../services/apiGlobal/ApiService'
 
-const roleApi = {
+const contentApi = {
   getListContent: (payload: any) => ApiClient.get('/api/web/Content/GetListContent', payload),
 
   createContent: (data) => ApiClient.post('/api/web/Content/CreateContent', data),
@@ -10,4 +10,4 @@ const roleApi = {
   deleteContent: (Id: number) => ApiClient.delete(`/api/web/Content/DeleteContent/${Id}`),
 }
 
-export default roleApi
+export default contentApi
