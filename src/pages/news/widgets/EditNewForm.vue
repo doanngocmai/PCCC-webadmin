@@ -5,7 +5,7 @@ import { New, TypeNew, TextTypeNew } from '../types'
 import { validators } from '../../../services/utils'
 
 const props = defineProps({
-  new: {
+  item: {
     type: Object as PropType<New | null>,
     default: null,
   },
@@ -19,10 +19,20 @@ const defaultNewContent: New = {
   id: -1,
   title: '',
   content: '',
-  image: [],
+  image: '',
   type: 0,
   isActive: true,
 }
+
+const image = ref<File>()
+
+const makeAvatarBlobUrl = (image: File) => {
+  return URL.createObjectURL(image)
+}
+
+watch(image, (newImage) => {
+  newNew.value.image = newImage ? makeAvatarBlobUrl(newImage) : ''
+})
 
 const newNew = ref<New>({ ...defaultNewContent })
 
@@ -34,11 +44,11 @@ const contentSelectOptions: { text: Capitalize<TextTypeNew>; value: TypeNew }[] 
 ]
 const isFormHasUnsavedChanges = computed(() => {
   return Object.keys(newNew.value).some((key) => {
-    if (key === 'avatar' || key === 'projects') {
+    if (key === 'image') {
       return false
     }
 
-    return newNew.value[key as keyof New] !== (props.new ?? defaultNewContent)?.[key as keyof New]
+    return newNew.value[key as keyof New] !== (props.item ?? defaultNewContent)?.[key as keyof New]
   })
 })
 
@@ -47,19 +57,19 @@ defineExpose({
 })
 
 watch(
-  () => props.new,
+  () => props.item,
   () => {
-    if (!props.new) {
+    if (!props.item) {
       return
     }
 
     newNew.value = {
-      ...props.new,
+      ...props.item,
+      image: props.item.image || '',
     }
   },
   { immediate: true },
 )
-
 const form = useForm('add-new-form')
 console.log(form)
 
@@ -95,8 +105,25 @@ const onSave = () => {
           option-label="text"
         />
       </div>
-      <div class="flex gap-4 flex-col sm:flex-row w-full">
-        <VaFileUpload v-model="newNew.image" type="gallery" class="w-full" fil-etypes="image/*" />
+      <div class="w-full">
+        <VaFileUpload
+          v-model="image"
+          type="single"
+          hide-file-list
+          class="self-stretch justify-start items-center gap-4 inline-flex"
+        >
+          <VaButton preset="primary" size="small">Add image</VaButton>
+          <VaButton
+            v-if="image"
+            preset="primary"
+            color="danger"
+            size="small"
+            icon="delete"
+            class="z-10"
+            @click.stop="image = undefined"
+          />
+        </VaFileUpload>
+        <VaImage :src="newNew.image" fit="cover" :class="['flex', 'w-full', 'max-h-32', { 'h-0': !image }]" />
       </div>
       <VaTextarea v-model="newNew.content" label="Description" class="w-full" name="description" />
       <div class="flex items-center w-1/2 mt-4">

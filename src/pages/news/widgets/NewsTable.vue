@@ -2,7 +2,7 @@
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
 import { New } from '../types'
 import { PropType, computed, toRef } from 'vue'
-import { Pagination, Sorting } from '../../../data/pages/contents'
+import { Pagination, Sorting } from '../../../data/pages/news'
 import { useVModel } from '@vueuse/core'
 import moment from 'moment'
 
@@ -16,7 +16,7 @@ const columns = defineVaDataTableColumns([
 ])
 
 const props = defineProps({
-  contents: {
+  news: {
     type: Array as PropType<New[]>,
     required: true,
   },
@@ -33,7 +33,7 @@ const emit = defineEmits<{
   (event: 'update:sortingOrder', sortingOrder: Sorting['sortingOrder']): void
 }>()
 
-const contents = toRef(props, 'contents')
+const news = toRef(props, 'news')
 const sortByVModel = useVModel(props, 'sortBy', emit)
 const sortingOrderVModel = useVModel(props, 'sortingOrder', emit)
 
@@ -85,7 +85,7 @@ const format_date = (value: Date) => {
     v-model:sort-by="sortByVModel"
     v-model:sorting-order="sortingOrderVModel"
     :columns="columns"
-    :items="contents"
+    :items="news"
     :loading="$props.loading"
   >
     <template #cell(ID)="{ rowData }">

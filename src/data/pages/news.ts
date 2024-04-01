@@ -33,6 +33,7 @@ export const getNews = async (filters?: Partial<Filters & Pagination & Sorting>)
 
   try {
     const response = await newApi.getListNew(filters)
+    console.log(response)
     number.value = response.data.totalItemCount
     news.value = response.data.data
     news.value = news.value.filter((item) => item.isActive === isActive)

@@ -5,6 +5,6 @@ export type New = {
   title: string
   type: number
   content: string
-  image: object
+  image: string
   isActive: true
 }

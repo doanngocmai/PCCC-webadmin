@@ -11,9 +11,7 @@
             @click="isSidebarMinimized = !isSidebarMinimized"
           />
         </Transition>
-        <RouterLink to="/" aria-label="Visit home page">
-          <VuesticLogo />
-        </RouterLink>
+        <RouterLink to="/" aria-label="Visit home page"> PCCC </RouterLink>
       </div>
     </template>
     <template #right>

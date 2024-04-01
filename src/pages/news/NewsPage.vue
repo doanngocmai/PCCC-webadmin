@@ -14,6 +14,7 @@ const newToEdit = ref<New | null>(null) // khởi tạo roleToEdit = New trong t
 
 const showEditNewModal = (item: New) => {
   newToEdit.value = item // check có data thì hiện modal edit
+  console.log(item)
   doShowEditNewModal.value = true //gán modal = true
 }
 
@@ -42,7 +43,7 @@ const onNewSaved = async (item) => {
     doShowEditNewModal.value = true
   }
 }
-const onContentDelete = async (item: New) => {
+const onNewDelete = async (item: New) => {
   const res = await newsApi.remove(item)
   console.log(res)
   notify({
@@ -102,8 +103,8 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
         :news="news"
         :loading="isLoading"
         :pagination="pagination"
-        @editContent="showEditNewModal"
-        @deleteContent="onContentDelete"
+        @editNew="showEditNewModal"
+        @deleteNew="onNewDelete"
       />
     </VaCardContent>
   </VaCard>
@@ -117,7 +118,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
     hide-default-actions
     :before-cancel="beforeEditFormModalClose"
   >
-    <h1 class="va-h5">{{ newToEdit ? 'Edit item' : 'Add item' }}</h1>
+    <h1 class="va-h5">{{ newToEdit ? 'Edit New' : 'Add New' }}</h1>
     <EditNewForm
       ref="editFormRef"
       :item="newToEdit"

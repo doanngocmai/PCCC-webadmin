@@ -117,14 +117,6 @@ const onSave = () => {
           class="self-stretch justify-start items-center gap-4 inline-flex"
         >
           <VaButton preset="primary" size="small">Add image</VaButton>
-          <VaButton
-            v-if="avatar"
-            preset="primary"
-            color="danger"
-            size="small"
-            icon="delete" 
-            @click.stop="avatar = undefined"
-          />
         </VaFileUpload>
       </div> -->
       <div class="flex items-center w-1/2 mt-4">

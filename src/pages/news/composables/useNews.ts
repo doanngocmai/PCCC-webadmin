@@ -36,6 +36,7 @@ export const useNews = (options?: {
       ...unref(pagination),
     })
     news.value = data
+    console.log(news.value)
 
     ignoreUpdates(() => {
       pagination.value = newPagination

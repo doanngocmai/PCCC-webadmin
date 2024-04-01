@@ -1,3 +1,4 @@
+@ -0,0 +1,183 @@
 <script setup lang="ts">
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
 import { User, UserRole } from '../types'
@@ -89,16 +90,16 @@ const formatProjectNames = (projects: Project[]) => {
     :items="users"
     :loading="$props.loading"
   >
-    <template #cell(fullName)="{ rowData }">
+    <template #cell(fullname)="{ rowData }">
       <div class="flex items-center gap-2 max-w-[230px] ellipsis">
         <UserAvatar :user="rowData as User" size="small" />
-        {{ rowData.fullName }}
+        {{ rowData.fullname }}
       </div>
     </template>
 
-    <template #cell(userName)="{ rowData }">
+    <template #cell(username)="{ rowData }">
       <div class="max-w-[120px] ellipsis">
-        {{ rowData.userName }}
+        {{ rowData.username }}
       </div>
     </template>
 
