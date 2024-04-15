@@ -24,19 +24,27 @@ export type Filters = {
 const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
-
+export const getBuildingById = async (building: Building) => {
+  try {
+    const res = await buildingApi.getBuildingById(building.id)
+    console.log(res)
+  } catch (error) {
+    console.error('Error fetching building:', error)
+  }
+}
 export const getBuildings = async (filters?: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const number = ref(0)
   const buildings = ref<Building[]>([])
-  const { page = 1, perPage = 10, isActive, search, sortBy, sortingOrder } = filters || {}
+  const { page = 1, perPage = 10, search, sortBy, sortingOrder } = filters || {}
 
   try {
     const response = await buildingApi.getListBuilding(filters)
+    console.log(response)
     number.value = response.data.totalItemCount
     buildings.value = response.data.data
-    buildings.value = buildings.value.filter((building) => building.isActive === isActive)
-
+    // buildings.value = buildings.value.filter((building) => building.isActive === isActive)
+    console.log(buildings.value)
     if (search) {
       buildings.value = buildings.value.filter((building) => building.name.toLowerCase().includes(search.toLowerCase()))
     }

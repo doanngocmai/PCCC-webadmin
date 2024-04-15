@@ -10,9 +10,9 @@ const doShowEditBuildingModal = ref(false) //khởi tạo show modal = false
 
 const { isLoading, filters, sorting, pagination, buildings, ...buildingsApi } = useBuildings() // lấy các biến từ useBuildings.ts
 
-const buildingToEdit = ref<Building | null>(null) // khởi tạo roleToEdit = Building trong types.ts
-
+const buildingToEdit = ref<Building | null>(null)
 const showEditBuildingModal = (building: Building) => {
+  console.log(building)
   buildingToEdit.value = building // check có data thì hiện modal edit
   doShowEditBuildingModal.value = true //gán modal = true
 }

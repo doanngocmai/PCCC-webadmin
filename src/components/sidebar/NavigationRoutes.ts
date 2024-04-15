@@ -47,6 +47,13 @@ export default {
       },
     },
     {
+      name: 'buildings',
+      displayName: 'menu.buildings',
+      meta: {
+        icon: 'domain',
+      },
+    },
+    {
       name: 'accounts',
       displayName: 'menu.accounts',
       meta: {

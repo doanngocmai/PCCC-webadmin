@@ -9,8 +9,8 @@ import moment from 'moment'
 const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
   { label: 'Name', key: 'name', sortable: true },
-  { label: 'Type', key: 'type', sortable: true },
-  { label: 'IsActive', key: 'isActive', sortable: true },
+  { label: 'Address', key: 'address', sortable: true },
+  { label: 'FloorCount', key: 'floorCount', sortable: true },
   { label: 'CreationTime', key: 'creationTime', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
@@ -55,26 +55,7 @@ const onBuildingDelete = async (building: Building) => {
     emit('delete-building', building)
   }
 }
-const formatTypes = (type: number) => {
-  if (type === 0) return 'No types'
-  if (type === 1) {
-    return 'Banner'
-  }
-  if (type === 2) {
-    return 'Footer'
-  }
-  if (type === 3) {
-    return 'Contact'
-  }
-}
-const formatActives = (isActive: boolean) => {
-  if (isActive === true) {
-    return 'Đang hoạt động'
-  }
-  if (isActive === false) {
-    return 'Ngưng hoạt động'
-  }
-}
+
 const format_date = (value: Date) => {
   return moment(String(value)).format('DD/MM/YYYY hh:mm')
 }
@@ -100,16 +81,18 @@ const format_date = (value: Date) => {
       </div>
     </template>
 
-    <template #cell(type)="{ rowData }">
+    <template #cell(address)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
-        {{ formatTypes(rowData.type) }}
+        {{ rowData.address }}
       </div>
     </template>
-    <template #cell(isActive)="{ rowData }">
+
+    <template #cell(floorCount)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
-        {{ formatActives(rowData.isActive) }}
+        {{ rowData.floorCount }}
       </div>
     </template>
+
     <template #cell(creationTime)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
         {{ format_date(rowData.creationTime) }}
