@@ -5,7 +5,7 @@ const buildingApi = {
 
   createBuilding: (data) => ApiClient.post('/api/web/Building/CreateBuilding', data),
 
-  getBuildingById: (id: number) => ApiClient.get('/api/web/Building/GetBuildingById', id),
+  getBuildingById: (Id: number) => ApiClient.get(`/api/web/Building/GetBuildingById?Id=${Id}`),
 
   updateBuilding: (data) => ApiClient.post('/api/web/Building/UpdateBuilding', data),
 

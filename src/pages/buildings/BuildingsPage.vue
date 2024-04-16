@@ -12,7 +12,6 @@ const { isLoading, filters, sorting, pagination, buildings, ...buildingsApi } = 
 
 const buildingToEdit = ref<Building | null>(null)
 const showEditBuildingModal = (building: Building) => {
-  console.log(building)
   buildingToEdit.value = building // check có data thì hiện modal edit
   doShowEditBuildingModal.value = true //gán modal = true
 }

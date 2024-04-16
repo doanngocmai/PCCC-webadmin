@@ -38,7 +38,7 @@ export async function handleResult(axiosPromise: any) {
 }
 
 export const ApiClient = {
-  get: async (url, payload) => await handleResult(axiosInstance.get(url, { params: payload })),
+  get: async (url: string, payload?: any) => await handleResult(axiosInstance.get(url, { params: payload })),
   post: async (url, payload) => await handleResult(axiosInstance.post(url, payload)),
   put: async (url, payload) => await handleResult(axiosInstance.put(url, payload)),
   patch: async (url, payload) => await handleResult(axiosInstance.patch(url, payload)),

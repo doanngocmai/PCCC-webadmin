@@ -24,11 +24,13 @@ export type Filters = {
 const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
-export const getBuildingById = async (building: Building) => {
+export const getBuildingById = async (buildingId: number) => {
   try {
-    const res = await buildingApi.getBuildingById(building.id)
-    console.log(res)
+    console.log(buildingId)
+    const res = await buildingApi.getBuildingById(buildingId)
+    return res
   } catch (error) {
+    console.log(error)
     console.error('Error fetching building:', error)
   }
 }
