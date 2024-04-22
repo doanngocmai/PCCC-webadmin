@@ -1,6 +1,14 @@
 import { Ref, ref, unref, watch } from 'vue'
-import { getNews, type Filters, Pagination, Sorting, addNew, updateNew, removeNew } from '../../../data/pages/news'
-import { New } from '../types'
+import {
+  getUpgradeAccs,
+  type Filters,
+  Pagination,
+  Sorting,
+  addUpgradeAccs,
+  updateUpgradeAcc,
+  removeUpgradeAcc,
+} from '../../../data/pages/upgradeAccs'
+import { UpgradeAcc } from '../types'
 import { watchIgnorable } from '@vueuse/core'
 import { useToast } from 'vuestic-ui'
 
@@ -10,25 +18,25 @@ const makeFiltersRef = () => ref<Partial<Filters>>({ isActive: true, search: '' 
 
 const { notify } = useToast()
 
-export const useNews = (options?: {
+export const useUpgradeAccs = (options?: {
   pagination?: Ref<Pagination>
   sorting?: Ref<Sorting>
   filters?: Ref<Partial<Filters>>
 }) => {
   const isLoading = ref(false)
-  const news = ref<New[]>([])
+  const upgrades = ref<UpgradeAcc[]>([])
 
   const { filters = makeFiltersRef(), sorting = makeSortingRef(), pagination = makePaginationRef() } = options || {}
   // Định nghĩa hàm fetch để tải dữ liệu từ API sử dụng các filters, sorting và pagination hiện tại.
   const fetch = async () => {
     isLoading.value = true
-    const { data, pagination: newPagination } = await getNews({
+    const { data, pagination: newPagination } = await getUpgradeAccs({
       ...unref(filters),
       ...unref(sorting),
       ...unref(pagination),
     })
-    news.value = data
-    console.log(news.value)
+    upgrades.value = data
+    console.log(upgrades.value)
 
     ignoreUpdates(() => {
       pagination.value = newPagination
@@ -58,14 +66,14 @@ export const useNews = (options?: {
     sorting,
     pagination,
 
-    news,
+    upgrades,
 
     fetch,
 
-    async add(item: New) {
+    async add(item: UpgradeAcc) {
       try {
         isLoading.value = true
-        const { res } = await addNew(item)
+        const { res } = await addUpgradeAccs(item)
         if (!!res && res.status === 1) {
           notify({
             message: `${item.title} has been created`,
@@ -78,10 +86,10 @@ export const useNews = (options?: {
       }
     },
 
-    async update(item: New) {
+    async update(item: UpgradeAcc) {
       try {
         isLoading.value = true
-        const { res } = await updateNew(item)
+        const { res } = await updateUpgradeAcc(item)
         if (!!res && res.status === 1) {
           notify({
             message: `${item.title} has been updated`,
@@ -94,9 +102,9 @@ export const useNews = (options?: {
       }
     },
 
-    async remove(item: New) {
+    async remove(item: UpgradeAcc) {
       isLoading.value = true
-      await removeNew(item)
+      await removeUpgradeAcc(item)
       await fetch()
       isLoading.value = false
     },

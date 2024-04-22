@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { sleep } from '../../services/utils'
-import { Building } from '../../pages/buildings/types'
-import buildingApi from '../../pages/buildings/api/BuildingApi'
+import { UpgradeAcc } from '../../pages/upgradeAccs/types'
+import upgradeAccApi from '../../pages/upgradeAccs/api/UpgradeAccApi'
 import { useToast } from 'vuestic-ui'
 
 const { notify } = useToast()
@@ -12,7 +12,7 @@ export type Pagination = {
 }
 
 export type Sorting = {
-  sortBy: keyof Building | undefined
+  sortBy: keyof UpgradeAcc | undefined
   sortingOrder: 'asc' | 'desc' | null
 }
 
@@ -24,37 +24,28 @@ export type Filters = {
 const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
-export const getBuildingById = async (buildingId: number) => {
-  try {
-    console.log(buildingId)
-    const res = await buildingApi.getBuildingById(buildingId)
-    return res
-  } catch (error) {
-    console.log(error)
-    console.error('Error fetching building:', error)
-  }
-}
-export const getBuildings = async (filters?: Partial<Filters & Pagination & Sorting>) => {
+
+export const getUpgradeAccs = async (filters?: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const number = ref(0)
-  const buildings = ref<Building[]>([])
-  const { page = 1, perPage = 10, search, sortBy, sortingOrder } = filters || {}
+  const upgrades = ref<UpgradeAcc[]>([])
+  const { page = 1, perPage = 10, isActive, search, sortBy, sortingOrder } = filters || {}
 
   try {
-    const response = await buildingApi.getListBuilding(filters)
+    const response = await upgradeAccApi.getListUpgradeAccount(filters)
     console.log(response)
     number.value = response.data.totalItemCount
-    buildings.value = response.data.data
-    // buildings.value = buildings.value.filter((building) => building.isActive === isActive)
-    console.log(buildings.value)
+    upgrades.value = response.data.data
+    upgrades.value = upgrades.value.filter((upgrade) => upgrade.isActive === isActive)
+
     if (search) {
-      buildings.value = buildings.value.filter((building) => building.name.toLowerCase().includes(search.toLowerCase()))
+      upgrades.value = upgrades.value.filter((upgrade) => upgrade.title.toLowerCase().includes(search.toLowerCase()))
     }
 
-    buildings.value = buildings.value.map((building) => ({ ...building }))
+    upgrades.value = upgrades.value.map((upgrade) => ({ ...upgrade }))
 
     if (sortBy && sortingOrder) {
-      buildings.value = buildings.value.sort((a, b) => {
+      upgrades.value = upgrades.value.sort((a, b) => {
         const first = getSortItem(a, sortBy)
         const second = getSortItem(b, sortBy)
         if (first > second) {
@@ -67,11 +58,11 @@ export const getBuildings = async (filters?: Partial<Filters & Pagination & Sort
       })
     }
   } catch (error) {
-    console.error('Error fetching building list:', error)
+    console.error('Error fetching upgrade list:', error)
   }
 
   return {
-    data: buildings.value,
+    data: upgrades.value,
     pagination: {
       page,
       perPage,
@@ -82,16 +73,16 @@ export const getBuildings = async (filters?: Partial<Filters & Pagination & Sort
 
 const hasError = ref(false)
 
-export const addBuilding = async (building: Building) => {
+export const addUpgradeAccs = async (upgrade: UpgradeAcc) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
-    const res = await buildingApi.createBuilding(building)
+    const res = await upgradeAccApi.createUpgradeAcc(upgrade)
     if (!!res && res.status === 1) {
       return { res, hasError }
     }
-    await getBuildings() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
-    return { error: 'Failed to create building' }
+    await getUpgradeAccs() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    return { error: 'Failed to create upgrade' }
   } catch (error: any) {
     hasError.value = true
 
@@ -112,18 +103,18 @@ export const addBuilding = async (building: Building) => {
     return { error: error.message || 'Unknown error occurred' }
   }
 }
-export const updateBuilding = async (building: Building) => {
+export const updateUpgradeAcc = async (upgrade: UpgradeAcc) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
-    const res = await buildingApi.updateBuilding(building)
+    const res = await upgradeAccApi.updateUpgradeAcc(upgrade)
 
     if (!!res && res.status === 1) {
       return { res, hasError }
     }
 
-    await getBuildings() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
-    return { error: 'Failed to update building' }
+    await getUpgradeAccs() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    return { error: 'Failed to update upgrade' }
   } catch (error: any) {
     hasError.value = true
 
@@ -145,8 +136,9 @@ export const updateBuilding = async (building: Building) => {
   }
 }
 
-export const removeBuilding = async (building: Building) => {
-  const res = await buildingApi.deleteBuilding(building.id)
+export const removeUpgradeAcc = async (upgrade: UpgradeAcc) => {
+  await sleep(1000)
+  const res = await upgradeAccApi.deleteUpgradeAcc(upgrade.id)
   console.log(res)
-  await getBuildings()
+  await getUpgradeAccs()
 }

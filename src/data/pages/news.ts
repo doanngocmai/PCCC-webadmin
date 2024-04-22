@@ -73,7 +73,7 @@ export const getNews = async (filters?: Partial<Filters & Pagination & Sorting>)
 
 const hasError = ref(false)
 
-export const addContent = async (item: New) => {
+export const addNew = async (item: New) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
@@ -103,7 +103,7 @@ export const addContent = async (item: New) => {
     return { error: error.message || 'Unknown error occurred' }
   }
 }
-export const updateContent = async (item: New) => {
+export const updateNew = async (item: New) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
@@ -136,7 +136,7 @@ export const updateContent = async (item: New) => {
   }
 }
 
-export const removeContent = async (item: New) => {
+export const removeNew = async (item: New) => {
   await sleep(1000)
   const res = await newApi.deleteNew(item.id)
   console.log(res)
