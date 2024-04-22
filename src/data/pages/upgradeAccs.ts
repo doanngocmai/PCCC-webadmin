@@ -39,7 +39,7 @@ export const getUpgradeAccs = async (filters?: Partial<Filters & Pagination & So
     upgrades.value = upgrades.value.filter((upgrade) => upgrade.isActive === isActive)
 
     if (search) {
-      upgrades.value = upgrades.value.filter((upgrade) => upgrade.title.toLowerCase().includes(search.toLowerCase()))
+      upgrades.value = upgrades.value.filter((upgrade) => upgrade.name.toLowerCase().includes(search.toLowerCase()))
     }
 
     upgrades.value = upgrades.value.map((upgrade) => ({ ...upgrade }))

@@ -1,26 +1,26 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import UpgradeAccsTable from './widgets/UpgradeAccsTable.vue'
-import EditUpgradeAccForm from './widgets/EditUpgradeAccForm.vue'
+import EditUpgradeForm from './widgets/EditUpgradeForm.vue'
 import { UpgradeAcc } from './types'
 import { useUpgradeAccs } from './composables/useUpgradeAccs'
 import { useModal, useToast } from 'vuestic-ui'
 
-const doShowEditNewModal = ref(false) //khởi tạo show modal = false
+const doShowEditUpgradeModal = ref(false) //khởi tạo show modal = false
 
 const { isLoading, filters, sorting, pagination, upgrades, ...upgradeAccsApi } = useUpgradeAccs() // lấy các biến từ useContents.ts
 
 const upgradeToEdit = ref<UpgradeAcc | null>(null) // khởi tạo roleToEdit = UpgradeAcc trong types.ts
 
-const showEditNewModal = (upgrade: UpgradeAcc) => {
+const showEditUpgradeModal = (upgrade: UpgradeAcc) => {
   upgradeToEdit.value = upgrade // check có data thì hiện modal edit
   console.log(upgrade)
-  doShowEditNewModal.value = true //gán modal = true
+  doShowEditUpgradeModal.value = true //gán modal = true
 }
 
-const showAddNewModal = () => {
+const showAddUpgradeModal = () => {
   upgradeToEdit.value = null
-  doShowEditNewModal.value = true
+  doShowEditUpgradeModal.value = true
 }
 
 const { init: notify } = useToast()
@@ -40,14 +40,14 @@ const onUpgradeSaved = async (upgrade) => {
   }
 
   if (hasError.value) {
-    doShowEditNewModal.value = true
+    doShowEditUpgradeModal.value = true
   }
 }
-const onNewDelete = async (upgrade: UpgradeAcc) => {
+const onUpgradeDelete = async (upgrade: UpgradeAcc) => {
   const res = await upgradeAccsApi.remove(upgrade)
   console.log(res)
   notify({
-    message: `${upgrade.title} has been deleted`,
+    message: `${upgrade.name} has been deleted`,
     color: 'error',
   })
 }
@@ -94,7 +94,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
             </template>
           </VaInput>
         </div>
-        <VaButton @click="showAddNewModal">Add UpgradeAcc</VaButton>
+        <VaButton @click="showAddUpgradeModal">Add Upgrade Account</VaButton>
       </div>
 
       <UpgradeAccsTable
@@ -103,23 +103,23 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
         :upgrades="upgrades"
         :loading="isLoading"
         :pagination="pagination"
-        @editNew="showEditNewModal"
-        @deleteNew="onNewDelete"
+        @editUpgrade="showEditUpgradeModal"
+        @deleteUpgrade="onUpgradeDelete"
       />
     </VaCardContent>
   </VaCard>
 
   <VaModal
     v-slot="{ cancel }"
-    v-model="doShowEditNewModal"
+    v-model="doShowEditUpgradeModal"
     size="small"
     mobile-fullscreen
     close-button
     hide-default-actions
     :before-cancel="beforeEditFormModalClose"
   >
-    <h1 class="va-h5">{{ upgradeToEdit ? 'Edit UpgradeAcc' : 'Add UpgradeAcc' }}</h1>
-    <EditUpgradeAccForm
+    <h1 class="va-h5">{{ upgradeToEdit ? 'Edit Upgrade Account' : 'Add Upgrade Account' }}</h1>
+    <EditUpgradeForm
       ref="editFormRef"
       :upgrade="upgradeToEdit"
       :save-button-label="upgradeToEdit ? 'Save' : 'Add'"

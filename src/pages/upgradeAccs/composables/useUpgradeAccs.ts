@@ -76,7 +76,7 @@ export const useUpgradeAccs = (options?: {
         const { res } = await addUpgradeAccs(item)
         if (!!res && res.status === 1) {
           notify({
-            message: `${item.title} has been created`,
+            message: `${item.name} has been created`,
             color: 'success',
           })
         }
@@ -92,7 +92,7 @@ export const useUpgradeAccs = (options?: {
         const { res } = await updateUpgradeAcc(item)
         if (!!res && res.status === 1) {
           notify({
-            message: `${item.title} has been updated`,
+            message: `${item.name} has been updated`,
             color: 'success',
           })
         }

@@ -2,7 +2,7 @@
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
 import { Building } from '../types'
 import { PropType, computed, toRef } from 'vue'
-import { Pagination, Sorting, getBuildingById } from '../../../data/pages/buildings'
+import { Pagination, Sorting } from '../../../data/pages/buildings'
 import { useVModel } from '@vueuse/core'
 import moment from 'moment'
 
@@ -27,17 +27,17 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (event: 'edit-building', data: Building): void
+  (event: 'edit-building', building: Building): void
   (event: 'delete-building', building: Building): void
   (event: 'update:sortBy', sortBy: Sorting['sortBy']): void
   (event: 'update:sortingOrder', sortingOrder: Sorting['sortingOrder']): void
 }>()
-const editBuilding = async (building: Building) => {
-  console.log(building)
-  const { data } = await getBuildingById(building.id)
-  console.log(data)
-  emit('edit-building', data as Building)
-}
+// const editBuilding = async (building: Building) => {
+//   console.log(building)
+//   const { data } = await getBuildingById(building.id)
+//   console.log(data)
+//   emit('edit-building', data as Building)
+// }
 const buildings = toRef(props, 'buildings')
 console.log(buildings)
 const sortByVModel = useVModel(props, 'sortBy', emit)
@@ -111,7 +111,7 @@ const format_date = (value: Date) => {
           size="small"
           icon="mso-edit"
           aria-label="Edit building"
-          @click="editBuilding(rowData as Building)"
+          @click="$emit('edit-building', rowData as Building)"
         />
         <VaButton
           preset="primary"

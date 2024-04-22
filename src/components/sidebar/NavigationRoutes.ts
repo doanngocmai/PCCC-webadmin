@@ -54,6 +54,13 @@ export default {
       },
     },
     {
+      name: 'upgradeAccs',
+      displayName: 'menu.upgradeAccs',
+      meta: {
+        icon: 'domain',
+      },
+    },
+    {
       name: 'accounts',
       displayName: 'menu.accounts',
       meta: {

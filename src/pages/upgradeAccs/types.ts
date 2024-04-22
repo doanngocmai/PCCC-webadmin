@@ -2,9 +2,11 @@ export type TextTypeUpgradeAcc = 'Banner' | 'Footer' | 'Contact' | 'Please Choos
 export type TypeUpgradeAcc = 1 | 2 | 3 | 0
 export type UpgradeAcc = {
   id: number
-  title: string
+  name: string
   type: number
-  content: string
-  image: string
+  price: number
+  description: string
+  startTime: Date
+  endTime: Date
   isActive: true
 }

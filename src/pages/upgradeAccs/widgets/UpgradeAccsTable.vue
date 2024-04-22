@@ -8,7 +8,8 @@ import moment from 'moment'
 
 const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
-  { label: 'Title', key: 'title', sortable: true },
+  { label: 'Name', key: 'name', sortable: true },
+  { label: 'Price', key: 'price', sortable: true },
   { label: 'Type', key: 'type', sortable: true },
   { label: 'IsActive', key: 'isActive', sortable: true },
   { label: 'CreationTime', key: 'creationTime', sortable: true },
@@ -44,7 +45,7 @@ const { confirm } = useModal()
 const onUserDelete = async (upgrade: UpgradeAcc) => {
   const agreed = await confirm({
     title: 'Delete upgrade',
-    message: `Are you sure you want to delete ${upgrade.title}?`,
+    message: `Are you sure you want to delete ${upgrade.name}?`,
     okText: 'Delete',
     cancelText: 'Cancel',
     size: 'small',
@@ -85,7 +86,7 @@ const format_date = (value: Date) => {
     v-model:sort-by="sortByVModel"
     v-model:sorting-order="sortingOrderVModel"
     :columns="columns"
-    :upgrades="upgrades"
+    :items="upgrades"
     :loading="$props.loading"
   >
     <template #cell(ID)="{ rowData }">
@@ -94,9 +95,15 @@ const format_date = (value: Date) => {
       </div>
     </template>
 
-    <template #cell(title)="{ rowData }">
+    <template #cell(name)="{ rowData }">
       <div class="max-w-[120px] ellipsis">
-        {{ rowData.title }}
+        {{ rowData.name }}
+      </div>
+    </template>
+
+    <template #cell(price)="{ rowData }">
+      <div class="max-w-[120px] ellipsis">
+        {{ rowData.price }}
       </div>
     </template>
 

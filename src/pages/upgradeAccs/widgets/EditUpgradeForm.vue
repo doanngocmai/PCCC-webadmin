@@ -3,9 +3,10 @@ import { PropType, computed, ref, watch } from 'vue'
 import { useForm } from 'vuestic-ui'
 import { UpgradeAcc, TypeUpgradeAcc, TextTypeUpgradeAcc } from '../types'
 import { validators } from '../../../services/utils'
+import { CURRENCIES, CURRENCIES_ICONS } from '../../accounts/typeAccounts'
 
 const props = defineProps({
-  upgradeAcc: {
+  upgrade: {
     type: Object as PropType<UpgradeAcc | null>,
     default: null,
   },
@@ -17,24 +18,16 @@ const props = defineProps({
 
 const defaultNewContent: UpgradeAcc = {
   id: -1,
-  title: '',
-  content: '',
-  image: '',
+  name: '',
+  price: 0,
+  description: '',
   type: 0,
+  startTime: new Date(),
+  endTime: new Date(),
   isActive: true,
 }
 
-const image = ref<File>()
-
-const makeAvatarBlobUrl = (image: File) => {
-  return URL.createObjectURL(image)
-}
-
-watch(image, (newImage) => {
-  newNew.value.image = newImage ? makeAvatarBlobUrl(newImage) : ''
-})
-
-const newNew = ref<UpgradeAcc>({ ...defaultNewContent })
+const newUpgradeAcc = ref<UpgradeAcc>({ ...defaultNewContent })
 
 const contentSelectOptions: { text: Capitalize<TextTypeUpgradeAcc>; value: TypeUpgradeAcc }[] = [
   { text: 'Please Choose Type', value: 0 },
@@ -43,12 +36,14 @@ const contentSelectOptions: { text: Capitalize<TextTypeUpgradeAcc>; value: TypeU
   { text: 'Contact', value: 3 },
 ]
 const isFormHasUnsavedChanges = computed(() => {
-  return Object.keys(newNew.value).some((key) => {
+  return Object.keys(newUpgradeAcc.value).some((key) => {
     if (key === 'image') {
       return false
     }
 
-    return newNew.value[key as keyof UpgradeAcc] !== (props.upgradeAcc ?? defaultNewContent)?.[key as keyof UpgradeAcc]
+    return (
+      newUpgradeAcc.value[key as keyof UpgradeAcc] !== (props.upgrade ?? defaultNewContent)?.[key as keyof UpgradeAcc]
+    )
   })
 })
 
@@ -57,15 +52,14 @@ defineExpose({
 })
 
 watch(
-  () => props.upgradeAcc,
+  () => props.upgrade,
   () => {
-    if (!props.upgradeAcc) {
+    if (!props.upgrade) {
       return
     }
 
-    newNew.value = {
-      ...props.upgradeAcc,
-      image: props.upgradeAcc.image || '',
+    newUpgradeAcc.value = {
+      ...props.upgrade,
     }
   },
   { immediate: true },
@@ -77,8 +71,8 @@ const emit = defineEmits(['close', 'save'])
 
 const onSave = () => {
   if (form.validate()) {
-    console.log(newNew.value)
-    emit('save', newNew.value)
+    console.log(newUpgradeAcc.value)
+    emit('save', newUpgradeAcc.value)
   }
 }
 </script>
@@ -88,46 +82,40 @@ const onSave = () => {
     <div class="self-stretch flex-col justify-start items-start gap-4 flex">
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput
-          v-model="newNew.title"
-          label="title"
+          v-model="newUpgradeAcc.name"
+          label="Name"
           class="w-full sm:w-1/2"
           :rules="[validators.required]"
-          name="title"
+          name="name"
         />
         <VaSelect
-          v-model="newNew.type"
+          v-model="newUpgradeAcc.type"
           label="Type"
           class="w-full"
           :options="contentSelectOptions"
-          :rules="[validators.required, (v) => newNew.type !== 0 || 'Please choose Type']"
+          :rules="[validators.required, (v) => newUpgradeAcc.type !== 0 || 'Please choose Type']"
           name="type"
           value-by="value"
           option-label="text"
         />
       </div>
-      <div class="w-full">
-        <VaFileUpload
-          v-model="image"
-          type="single"
-          hide-file-list
-          class="self-stretch justify-start items-center gap-4 inline-flex"
-        >
-          <VaButton preset="primary" size="small">Add image</VaButton>
-          <VaButton
-            v-if="image"
-            preset="primary"
-            color="danger"
-            size="small"
-            icon="delete"
-            class="z-10"
-            @click.stop="image = undefined"
-          />
-        </VaFileUpload>
-        <VaImage :src="newNew.image" fit="cover" :class="['flex', 'w-full', 'max-h-32', { 'h-0': !image }]" />
+      <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <VaInput v-model="newUpgradeAcc.price" class="w-full sm:w-1/2" placeholder="0.00" label="Price">
+          <template #prependInner>
+            <span v-html="CURRENCIES_ICONS.VND" />
+          </template>
+          <template #appendInner>
+            <span>{{ CURRENCIES.VND }}</span>
+          </template>
+        </VaInput>
       </div>
-      <VaTextarea v-model="newNew.content" label="Description" class="w-full" name="description" />
+      <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <VaDateInput v-model="newUpgradeAcc.startTime" class="w-full sm:w-1/2" label="StartTime" preset="solid" />
+        <VaDateInput v-model="newUpgradeAcc.endTime" class="w-full sm:w-1/2" label="EndTime" preset="solid" />
+      </div>
+      <VaTextarea v-model="newUpgradeAcc.description" label="Description" class="w-full" name="description" />
       <div class="flex items-center w-1/2 mt-4">
-        <VaCheckbox v-model="newNew.isActive" label="IsActive" class="w-full" name="active" />
+        <VaCheckbox v-model="newUpgradeAcc.isActive" label="IsActive" class="w-full" name="active" />
       </div>
     </div>
     <div class="flex gap-2 flex-col-reverse items-stretch justify-end w-full sm:flex-row sm:items-center">
