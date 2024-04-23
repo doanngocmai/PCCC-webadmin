@@ -57,14 +57,14 @@ export default {
       name: 'upgradeAccs',
       displayName: 'menu.upgradeAccs',
       meta: {
-        icon: 'domain',
+        icon: 'ios_share',
       },
     },
     {
       name: 'advertisings',
       displayName: 'menu.advertisings',
       meta: {
-        icon: 'domain',
+        icon: 'campaign',
       },
     },
     {
