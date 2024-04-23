@@ -1,14 +1,14 @@
 import { Ref, ref, unref, watch } from 'vue'
 import {
-  getBuildings,
+  getAdvertisings,
   type Filters,
   Pagination,
   Sorting,
-  addBuilding,
-  updateBuilding,
-  removeBuilding,
-} from '../../../data/pages/buildings'
-import { Building } from '../types'
+  createAdvertising,
+  updateAdvertising,
+  removeAdvertising,
+} from '../../../data/pages/advertisings'
+import { Advertising } from '../typeAds'
 import { watchIgnorable } from '@vueuse/core'
 import { useToast } from 'vuestic-ui'
 
@@ -18,24 +18,25 @@ const makeFiltersRef = () => ref<Partial<Filters>>({ isActive: true, search: '' 
 
 const { notify } = useToast()
 
-export const useBuildings = (options?: {
+export const useAdvertisings = (options?: {
   pagination?: Ref<Pagination>
   sorting?: Ref<Sorting>
   filters?: Ref<Partial<Filters>>
 }) => {
   const isLoading = ref(false)
-  const buildings = ref<Building[]>([])
+  const advertisings = ref<Advertising[]>([])
 
   const { filters = makeFiltersRef(), sorting = makeSortingRef(), pagination = makePaginationRef() } = options || {}
   // Định nghĩa hàm fetch để tải dữ liệu từ API sử dụng các filters, sorting và pagination hiện tại.
   const fetch = async () => {
     isLoading.value = true
-    const { data, pagination: newPagination } = await getBuildings({
+    const { data, pagination: newPagination } = await getAdvertisings({
       ...unref(filters),
       ...unref(sorting),
       ...unref(pagination),
     })
-    buildings.value = data
+    advertisings.value = data
+    console.log(advertisings.value)
 
     ignoreUpdates(() => {
       pagination.value = newPagination
@@ -65,17 +66,17 @@ export const useBuildings = (options?: {
     sorting,
     pagination,
 
-    buildings,
+    advertisings,
 
     fetch,
 
-    async add(building: Building) {
+    async add(advertising: Advertising) {
       try {
         isLoading.value = true
-        const { res, hasError } = await addBuilding(building)
+        const { res, hasError } = await createAdvertising(advertising)
         if (!!res && res.status === 1) {
           notify({
-            message: `${building.name} has been created`,
+            message: `${advertising.name} has been created`,
             color: 'success',
           })
           return {
@@ -91,13 +92,13 @@ export const useBuildings = (options?: {
       }
     },
 
-    async update(building: Building) {
+    async update(advertising: Advertising) {
       try {
         isLoading.value = true
-        const { res, hasError } = await updateBuilding(building)
+        const { res, hasError } = await updateAdvertising(advertising)
         if (!!res && res.status === 1) {
           notify({
-            message: `${building.name} has been updated`,
+            message: `${advertising.name} has been updated`,
             color: 'success',
           })
           return {
@@ -113,9 +114,9 @@ export const useBuildings = (options?: {
       }
     },
 
-    async remove(building: Building) {
+    async remove(advertising: Advertising) {
       isLoading.value = true
-      await removeBuilding(building)
+      await removeAdvertising(advertising)
       await fetch()
       isLoading.value = false
     },

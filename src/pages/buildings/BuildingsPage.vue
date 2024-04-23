@@ -13,6 +13,7 @@ const { isLoading, filters, sorting, pagination, buildings, ...buildingsApi } = 
 const buildingToEdit = ref<Building | null>(null)
 const showEditBuildingModal = (building: Building) => {
   buildingToEdit.value = building // check có data thì hiện modal edit
+  console.log(building)
   doShowEditBuildingModal.value = true //gán modal = true
 }
 
@@ -23,27 +24,16 @@ const showAddBuildingModal = () => {
 
 const { init: notify } = useToast()
 
-const hasError = ref(false)
-const onContentSaved = async (building: Building) => {
+const onBuildingSaved = async (building: Building) => {
   if (buildingToEdit.value) {
-    try {
-      await buildingsApi.update(building)
-      hasError.value = false
-    } catch (error) {
-      hasError.value = true
-    }
+    const { hasError } = await buildingsApi.update(building)
+    doShowEditBuildingModal.value = hasError?.value === true
   } else {
-    try {
-      await buildingsApi.add(building)
-      hasError.value = false
-    } catch (error) {
-      hasError.value = true
-    }
-  }
-  if (hasError.value) {
-    doShowEditBuildingModal.value = true
+    const { hasError } = await buildingsApi.add(building)
+    doShowEditBuildingModal.value = hasError?.value === true
   }
 }
+
 const onBuildingDelete = async (building: Building) => {
   const res = await buildingsApi.remove(building)
   console.log(res)
@@ -104,7 +94,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
         :buildings="buildings"
         :loading="isLoading"
         :pagination="pagination"
-        @editBuiding="showEditBuildingModal"
+        @editBuilding="showEditBuildingModal"
         @deleteBuiding="onBuildingDelete"
       />
     </VaCardContent>
@@ -127,7 +117,7 @@ const beforeEditFormModalClose = async (hide: () => unknown) => {
       @close="cancel"
       @save="
         (building) => {
-          onContentSaved(building)
+          onBuildingSaved(building)
           ok()
         }
       "

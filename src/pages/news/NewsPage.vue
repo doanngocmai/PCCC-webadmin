@@ -25,24 +25,16 @@ const showAddNewModal = () => {
 
 const { init: notify } = useToast()
 
-const hasError = ref(false)
-
-const onNewSaved = async (item) => {
-  try {
-    if (newToEdit.value) {
-      await newsApi.update(item)
-    } else {
-      await newsApi.add(item)
-    }
-    hasError.value = false
-  } catch (error) {
-    hasError.value = true
-  }
-
-  if (hasError.value) {
-    doShowEditNewModal.value = true
+const onNewSaved = async (item: New) => {
+  if (newToEdit.value) {
+    const { hasError } = await newsApi.update(item)
+    doShowEditNewModal.value = hasError?.value === true
+  } else {
+    const { hasError } = await newsApi.add(item)
+    doShowEditNewModal.value = hasError?.value === true
   }
 }
+
 const onNewDelete = async (item: New) => {
   const res = await newsApi.remove(item)
   console.log(res)

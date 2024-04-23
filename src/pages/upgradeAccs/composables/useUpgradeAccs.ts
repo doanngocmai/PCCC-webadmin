@@ -73,12 +73,18 @@ export const useUpgradeAccs = (options?: {
     async add(item: UpgradeAcc) {
       try {
         isLoading.value = true
-        const { res } = await addUpgradeAccs(item)
+        const { res, hasError } = await addUpgradeAccs(item)
         if (!!res && res.status === 1) {
           notify({
             message: `${item.name} has been created`,
             color: 'success',
           })
+          return {
+            hasError,
+          }
+        }
+        return {
+          hasError,
         }
       } finally {
         await fetch()
@@ -89,12 +95,18 @@ export const useUpgradeAccs = (options?: {
     async update(item: UpgradeAcc) {
       try {
         isLoading.value = true
-        const { res } = await updateUpgradeAcc(item)
+        const { res, hasError } = await updateUpgradeAcc(item)
         if (!!res && res.status === 1) {
           notify({
             message: `${item.name} has been updated`,
             color: 'success',
           })
+          return {
+            hasError,
+          }
+        }
+        return {
+          hasError,
         }
       } finally {
         await fetch()

@@ -61,6 +61,13 @@ export default {
       },
     },
     {
+      name: 'advertisings',
+      displayName: 'menu.advertisings',
+      meta: {
+        icon: 'domain',
+      },
+    },
+    {
       name: 'accounts',
       displayName: 'menu.accounts',
       meta: {

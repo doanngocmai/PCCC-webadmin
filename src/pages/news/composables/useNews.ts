@@ -65,12 +65,18 @@ export const useNews = (options?: {
     async add(item: New) {
       try {
         isLoading.value = true
-        const { res } = await addNew(item)
+        const { res, hasError } = await addNew(item)
         if (!!res && res.status === 1) {
           notify({
             message: `${item.title} has been created`,
             color: 'success',
           })
+          return {
+            hasError,
+          }
+        }
+        return {
+          hasError,
         }
       } finally {
         await fetch()
@@ -81,12 +87,18 @@ export const useNews = (options?: {
     async update(item: New) {
       try {
         isLoading.value = true
-        const { res } = await updateNew(item)
+        const { res, hasError } = await updateNew(item)
         if (!!res && res.status === 1) {
           notify({
             message: `${item.title} has been updated`,
             color: 'success',
           })
+          return {
+            hasError,
+          }
+        }
+        return {
+          hasError,
         }
       } finally {
         await fetch()

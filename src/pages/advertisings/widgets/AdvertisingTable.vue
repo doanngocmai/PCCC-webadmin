@@ -1,23 +1,24 @@
 <script setup lang="ts">
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
-import { Building } from '../types'
+import { Advertising } from '../typeAds'
 import { PropType, computed, toRef } from 'vue'
-import { Pagination, Sorting, getBuildingById } from '../../../data/pages/buildings'
+import { Pagination, Sorting } from '../../../data/pages/advertisings'
 import { useVModel } from '@vueuse/core'
 import moment from 'moment'
 
 const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
   { label: 'Name', key: 'name', sortable: true },
-  { label: 'Address', key: 'address', sortable: true },
-  { label: 'FloorCount', key: 'floorCount', sortable: true },
+  { label: 'Price', key: 'price', sortable: true },
+  { label: 'Type', key: 'type', sortable: true },
+  { label: 'IsActive', key: 'isActive', sortable: true },
   { label: 'CreationTime', key: 'creationTime', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
 
 const props = defineProps({
-  buildings: {
-    type: Array as PropType<Building[]>,
+  advertisings: {
+    type: Array as PropType<Advertising[]>,
     required: true,
   },
   loading: { type: Boolean, default: false },
@@ -27,19 +28,13 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (event: 'edit-building', building: Building): void
-  (event: 'delete-building', building: Building): void
+  (event: 'edit-advertising', advertising: Advertising): void
+  (event: 'delete-advertising', advertising: Advertising): void
   (event: 'update:sortBy', sortBy: Sorting['sortBy']): void
   (event: 'update:sortingOrder', sortingOrder: Sorting['sortingOrder']): void
 }>()
-const editBuilding = async (building: Building) => {
-  console.log(building)
-  const { data } = await getBuildingById(building.id)
-  console.log(data)
-  emit('edit-building', data as Building)
-}
-const buildings = toRef(props, 'buildings')
-console.log(buildings)
+
+const advertisings = toRef(props, 'advertisings')
 const sortByVModel = useVModel(props, 'sortBy', emit)
 const sortingOrderVModel = useVModel(props, 'sortingOrder', emit)
 
@@ -47,10 +42,10 @@ const totalPages = computed(() => Math.ceil(props.pagination.total / props.pagin
 
 const { confirm } = useModal()
 
-const onBuildingDelete = async (building: Building) => {
+const onUserDelete = async (advertising: Advertising) => {
   const agreed = await confirm({
-    title: 'Delete building',
-    message: `Are you sure you want to delete ${building.name}?`,
+    title: 'Delete advertising',
+    message: `Are you sure you want to delete ${advertising.name}?`,
     okText: 'Delete',
     cancelText: 'Cancel',
     size: 'small',
@@ -58,10 +53,29 @@ const onBuildingDelete = async (building: Building) => {
   })
 
   if (agreed) {
-    emit('delete-building', building)
+    emit('delete-advertising', advertising)
   }
 }
-
+const formatTypes = (type: number) => {
+  if (type === 0) return 'No types'
+  if (type === 1) {
+    return 'Banner'
+  }
+  if (type === 2) {
+    return 'Footer'
+  }
+  if (type === 3) {
+    return 'Contact'
+  }
+}
+const formatActives = (isActive: boolean) => {
+  if (isActive === true) {
+    return 'Đang hoạt động'
+  }
+  if (isActive === false) {
+    return 'Ngưng hoạt động'
+  }
+}
 const format_date = (value: Date) => {
   return moment(String(value)).format('DD/MM/YYYY hh:mm')
 }
@@ -72,7 +86,7 @@ const format_date = (value: Date) => {
     v-model:sort-by="sortByVModel"
     v-model:sorting-order="sortingOrderVModel"
     :columns="columns"
-    :items="buildings"
+    :items="advertisings"
     :loading="$props.loading"
   >
     <template #cell(ID)="{ rowData }">
@@ -87,18 +101,22 @@ const format_date = (value: Date) => {
       </div>
     </template>
 
-    <template #cell(address)="{ rowData }">
-      <div class="ellipsis max-w-[230px]">
-        {{ rowData.address }}
+    <template #cell(price)="{ rowData }">
+      <div class="max-w-[120px] ellipsis">
+        {{ rowData.price }}
       </div>
     </template>
 
-    <template #cell(floorCount)="{ rowData }">
+    <template #cell(type)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
-        {{ rowData.floorCount }}
+        {{ formatTypes(rowData.type) }}
       </div>
     </template>
-
+    <template #cell(isActive)="{ rowData }">
+      <div class="ellipsis max-w-[230px]">
+        {{ formatActives(rowData.isActive) }}
+      </div>
+    </template>
     <template #cell(creationTime)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
         {{ format_date(rowData.creationTime) }}
@@ -110,16 +128,16 @@ const format_date = (value: Date) => {
           preset="primary"
           size="small"
           icon="mso-edit"
-          aria-label="Edit building"
-          @click="editBuilding(rowData as Building)"
+          aria-label="Edit advertising"
+          @click="$emit('edit-advertising', rowData as Advertising)"
         />
         <VaButton
           preset="primary"
           size="small"
           icon="mso-delete"
           color="danger"
-          aria-label="Delete building"
-          @click="onBuildingDelete(rowData as Building)"
+          aria-label="Delete advertising"
+          @click="onUserDelete(rowData as Advertising)"
         />
       </div>
     </template>
@@ -167,3 +185,4 @@ const format_date = (value: Date) => {
   }
 }
 </style>
+../typeAdss../types

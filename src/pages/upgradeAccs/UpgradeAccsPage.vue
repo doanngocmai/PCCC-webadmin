@@ -25,24 +25,16 @@ const showAddUpgradeModal = () => {
 
 const { init: notify } = useToast()
 
-const hasError = ref(false)
-
-const onUpgradeSaved = async (upgrade) => {
-  try {
-    if (upgradeToEdit.value) {
-      await upgradeAccsApi.update(upgrade)
-    } else {
-      await upgradeAccsApi.add(upgrade)
-    }
-    hasError.value = false
-  } catch (error) {
-    hasError.value = true
-  }
-
-  if (hasError.value) {
-    doShowEditUpgradeModal.value = true
+const onUpgradeSaved = async (item: UpgradeAcc) => {
+  if (upgradeToEdit.value) {
+    const { hasError } = await upgradeAccsApi.update(item)
+    doShowEditUpgradeModal.value = hasError?.value === true
+  } else {
+    const { hasError } = await upgradeAccsApi.add(item)
+    doShowEditUpgradeModal.value = hasError?.value === true
   }
 }
+
 const onUpgradeDelete = async (upgrade: UpgradeAcc) => {
   const res = await upgradeAccsApi.remove(upgrade)
   console.log(res)
