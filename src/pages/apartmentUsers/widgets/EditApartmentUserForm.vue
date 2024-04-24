@@ -3,7 +3,7 @@ import { PropType, computed, ref, watch } from 'vue'
 import { useForm } from 'vuestic-ui'
 import { ApartmentUser } from '../types'
 import { validators } from '../../../services/utils'
-import buildingApi from '.././../buildings/api/BuildingApi'
+// import buildingApi from '.././../buildings/api/BuildingApi'
 
 const props = defineProps({
   apartment: {
@@ -59,8 +59,8 @@ watch(
   { immediate: true },
 )
 
-const listAllBuilding = await buildingApi.getListAllBuilding()
-console.log(listAllBuilding)
+// const listAllBuilding = await buildingApi.getListAllBuilding()
+// console.log(listAllBuilding)
 
 const form = useForm('add-apartment-form')
 console.log(form)
