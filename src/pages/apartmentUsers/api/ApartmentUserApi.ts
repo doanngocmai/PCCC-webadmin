@@ -1,15 +1,15 @@
 import { ApiClient } from '../../../services/apiGlobal/ApiService'
 
 const buildingApi = {
-  getListApartmentUser: (payload: any) => ApiClient.get('/api/web/ApartmentUser/GetListBuilding', payload),
+  getListApartmentUser: (payload: any) => ApiClient.get('/api/web/ApartmentUser/GetListApartmentUser', payload),
 
-  createBuilding: (data) => ApiClient.post('/api/web/ApartmentUser/CreateBuilding', data),
+  createApartmentUser: (data) => ApiClient.post('/api/web/ApartmentUser/CreateApartmentUser', data),
 
-  getBuildingById: (Id: number) => ApiClient.get(`/api/web/ApartmentUser/GetBuildingById?Id=${Id}`),
+  getApartmentUserById: (Id: number) => ApiClient.get(`/api/web/ApartmentUser/GetApartmentUserById?Id=${Id}`),
 
-  updateBuilding: (data) => ApiClient.post('/api/web/ApartmentUser/UpdateBuilding', data),
+  updateApartmentUser: (data) => ApiClient.post('/api/web/ApartmentUser/UpdateApartmentUser', data),
 
-  deleteBuilding: (Id: number) => ApiClient.delete(`/api/web/ApartmentUser/DeleteBuilding/${Id}`),
+  deleteApartmentUser: (Id: number) => ApiClient.delete(`/api/web/ApartmentUser/DeleteApartmentUser/${Id}`),
 }
 
 export default buildingApi

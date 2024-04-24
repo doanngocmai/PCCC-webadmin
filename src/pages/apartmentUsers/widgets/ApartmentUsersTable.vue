@@ -2,7 +2,7 @@
 import { defineVaDataTableColumns, useModal } from 'vuestic-ui'
 import { ApartmentUser } from '../types'
 import { PropType, computed, toRef } from 'vue'
-import { Pagination, Sorting, getBuildingById } from '../../../data/pages/apartmentUsers'
+import { Pagination, Sorting } from '../../../data/pages/apartmentUsers'
 import { useVModel } from '@vueuse/core'
 import moment from 'moment'
 
@@ -10,7 +10,7 @@ const columns = defineVaDataTableColumns([
   { label: 'ID', key: 'id', sortable: true },
   { label: 'Name', key: 'name', sortable: true },
   { label: 'Address', key: 'address', sortable: true },
-  { label: 'FloorCount', key: 'floorCount', sortable: true },
+  { label: 'FloorNumber', key: 'floorNumber', sortable: true },
   { label: 'CreationTime', key: 'creationTime', sortable: true },
   { label: ' ', key: 'actions', align: 'right' },
 ])
@@ -32,12 +32,7 @@ const emit = defineEmits<{
   (event: 'update:sortBy', sortBy: Sorting['sortBy']): void
   (event: 'update:sortingOrder', sortingOrder: Sorting['sortingOrder']): void
 }>()
-const editBuilding = async (apartment: ApartmentUser) => {
-  console.log(apartment)
-  const { data } = await getBuildingById(apartment.id)
-  console.log(data)
-  emit('edit-apartment', data as ApartmentUser)
-}
+
 const apartments = toRef(props, 'apartments')
 console.log(apartments)
 const sortByVModel = useVModel(props, 'sortBy', emit)
@@ -95,7 +90,7 @@ const format_date = (value: Date) => {
 
     <template #cell(floorCount)="{ rowData }">
       <div class="ellipsis max-w-[230px]">
-        {{ rowData.floorCount }}
+        {{ rowData.floorNumber }}
       </div>
     </template>
 
@@ -111,7 +106,7 @@ const format_date = (value: Date) => {
           size="small"
           icon="mso-edit"
           aria-label="Edit Apartment"
-          @click="editBuilding(rowData as ApartmentUser)"
+          @click="$emit('edit-apartment', rowData as ApartmentUser)"
         />
         <VaButton
           preset="primary"

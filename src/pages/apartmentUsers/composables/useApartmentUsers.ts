@@ -1,12 +1,12 @@
 import { Ref, ref, unref, watch } from 'vue'
 import {
-  getBuildings,
+  getApartments,
   type Filters,
   Pagination,
   Sorting,
-  addBuilding,
-  updateBuilding,
-  removeBuilding,
+  addApartment,
+  updateApartment,
+  removeApartment,
 } from '../../../data/pages/apartmentUsers'
 import { ApartmentUser } from '../types'
 import { watchIgnorable } from '@vueuse/core'
@@ -30,7 +30,7 @@ export const useApartmentUsers = (options?: {
   // Định nghĩa hàm fetch để tải dữ liệu từ API sử dụng các filters, sorting và pagination hiện tại.
   const fetch = async () => {
     isLoading.value = true
-    const { data, pagination: newPagination } = await getBuildings({
+    const { data, pagination: newPagination } = await getApartments({
       ...unref(filters),
       ...unref(sorting),
       ...unref(pagination),
@@ -72,7 +72,7 @@ export const useApartmentUsers = (options?: {
     async add(apartment: ApartmentUser) {
       try {
         isLoading.value = true
-        const { res, hasError } = await addBuilding(apartment)
+        const { res, hasError } = await addApartment(apartment)
         if (!!res && res.status === 1) {
           notify({
             message: `${apartment.name} has been created`,
@@ -94,7 +94,7 @@ export const useApartmentUsers = (options?: {
     async update(apartment: ApartmentUser) {
       try {
         isLoading.value = true
-        const { res, hasError } = await updateBuilding(apartment)
+        const { res, hasError } = await updateApartment(apartment)
         if (!!res && res.status === 1) {
           notify({
             message: `${apartment.name} has been updated`,
@@ -115,7 +115,7 @@ export const useApartmentUsers = (options?: {
 
     async remove(apartment: ApartmentUser) {
       isLoading.value = true
-      await removeBuilding(apartment)
+      await removeApartment(apartment)
       await fetch()
       isLoading.value = false
     },

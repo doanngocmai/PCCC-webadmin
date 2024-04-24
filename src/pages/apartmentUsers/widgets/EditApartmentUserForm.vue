@@ -3,6 +3,7 @@ import { PropType, computed, ref, watch } from 'vue'
 import { useForm } from 'vuestic-ui'
 import { ApartmentUser } from '../types'
 import { validators } from '../../../services/utils'
+import buildingApi from '.././../buildings/api/BuildingApi'
 
 const props = defineProps({
   apartment: {
@@ -19,7 +20,7 @@ const defaultNewContent: ApartmentUser = {
   id: -1,
   address: '',
   name: '',
-  floorCount: '',
+  floorNumber: '',
   buildingId: 0,
   mapId: 0,
   areaId: 0,
@@ -58,6 +59,9 @@ watch(
   { immediate: true },
 )
 
+const listAllBuilding = await buildingApi.getListAllBuilding()
+console.log(listAllBuilding)
+
 const form = useForm('add-apartment-form')
 console.log(form)
 
@@ -86,11 +90,22 @@ const onSave = () => {
           :rules="[validators.required]"
           name="name"
         />
-        <VaInput v-model="newApartment.floorCount" label="FloorCount" class="w-full sm:w-1/2" name="floorCount" />
+        <VaInput v-model="newApartment.floorNumber" label="FloorNumber" class="w-full sm:w-1/2" name="floorNumber" />
       </div>
       <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaInput v-model="newApartment.address" label="Address" class="w-full sm:w-1/2" name="address" />
       </div>
+      <!-- <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <VaSelect
+          v-model="newApartment.buildingId"
+          label="Type"
+          class="w-full"
+          :rules="[validators.required, (v) => newApartment.buildingId !== 0 || 'Please choose Type']"
+          name="type"
+          value-by="value"
+          option-label="text"
+        />
+      </div> -->
     </div>
     <div class="flex gap-2 flex-col-reverse items-stretch justify-end w-full sm:flex-row sm:items-center">
       <VaButton preset="secondary" color="secondary" @click="$emit('close')">Cancel</VaButton>

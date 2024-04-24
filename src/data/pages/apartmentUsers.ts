@@ -27,14 +27,14 @@ const getSortItem = (obj: any, sortBy: string) => {
 export const getBuildingById = async (buildingId: number) => {
   try {
     console.log(buildingId)
-    const res = await apartmentUserApi.getBuildingById(buildingId)
+    const res = await apartmentUserApi.getApartmentUserById(buildingId)
     return res
   } catch (error) {
     console.log(error)
     console.error('Error fetching apartment:', error)
   }
 }
-export const getBuildings = async (filters?: Partial<Filters & Pagination & Sorting>) => {
+export const getApartments = async (filters?: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const number = ref(0)
   const apartments = ref<ApartmentUser[]>([])
@@ -84,15 +84,15 @@ export const getBuildings = async (filters?: Partial<Filters & Pagination & Sort
 
 const hasError = ref(false)
 
-export const addBuilding = async (apartment: ApartmentUser) => {
+export const addApartment = async (apartment: ApartmentUser) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
-    const res = await apartmentUserApi.createBuilding(apartment)
+    const res = await apartmentUserApi.createApartmentUser(apartment)
     if (!!res && res.status === 1) {
       return { res, hasError }
     }
-    await getBuildings() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    await getApartments() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
     return { error: 'Failed to create apartment' }
   } catch (error: any) {
     hasError.value = true
@@ -114,17 +114,17 @@ export const addBuilding = async (apartment: ApartmentUser) => {
     return { error: error.message || 'Unknown error occurred' }
   }
 }
-export const updateBuilding = async (apartment: ApartmentUser) => {
+export const updateApartment = async (apartment: ApartmentUser) => {
   try {
     await sleep(1000) // Giả lập thời gian chờ
     hasError.value = false
-    const res = await apartmentUserApi.updateBuilding(apartment)
+    const res = await apartmentUserApi.updateApartmentUser(apartment)
 
     if (!!res && res.status === 1) {
       return { res, hasError }
     }
 
-    await getBuildings() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
+    await getApartments() // Gọi lại hàm fetch hoặc hàm tương tự để cập nhật dữ liệu
     return { error: 'Failed to update apartment' }
   } catch (error: any) {
     hasError.value = true
@@ -147,8 +147,8 @@ export const updateBuilding = async (apartment: ApartmentUser) => {
   }
 }
 
-export const removeBuilding = async (apartment: ApartmentUser) => {
-  const res = await apartmentUserApi.deleteBuilding(apartment.id)
+export const removeApartment = async (apartment: ApartmentUser) => {
+  const res = await apartmentUserApi.deleteApartmentUser(apartment.id)
   console.log(res)
-  await getBuildings()
+  await getApartments()
 }

@@ -68,6 +68,13 @@ export default {
       },
     },
     {
+      name: 'apartmentUsers',
+      displayName: 'menu.apartmentUsers',
+      meta: {
+        icon: 'apartment',
+      },
+    },
+    {
       name: 'accounts',
       displayName: 'menu.accounts',
       meta: {

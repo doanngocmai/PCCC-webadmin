@@ -57,9 +57,10 @@
     "roles": "Roles",
     "contents": "Contents",
     "buildings": "Buildings",
-    "upgradeAccs": "Upgrade Account",
+    "upgradeAccs": "Upgrade Accounts",
     "accounts": "Accounts",
     "advertisings": "Advertisings",
+    "apartmentUsers": "Apartment Users",
     "news": "News",
     "projects": "Projects"
   },
