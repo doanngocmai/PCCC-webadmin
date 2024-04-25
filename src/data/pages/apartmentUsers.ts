@@ -17,17 +17,16 @@ export type Sorting = {
 }
 
 export type Filters = {
-  isActive: boolean
   search: string
 }
 
 const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
-export const getBuildingById = async (buildingId: number) => {
+export const getApartmentUserById = async (id: number) => {
   try {
-    console.log(buildingId)
-    const res = await apartmentUserApi.getApartmentUserById(buildingId)
+    console.log(id)
+    const res = await apartmentUserApi.getApartmentUserById(id)
     return res
   } catch (error) {
     console.log(error)

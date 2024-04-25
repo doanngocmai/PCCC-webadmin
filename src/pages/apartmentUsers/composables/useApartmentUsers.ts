@@ -14,7 +14,7 @@ import { useToast } from 'vuestic-ui'
 
 const makePaginationRef = () => ref<Pagination>({ page: 1, perPage: 10, total: 0 })
 const makeSortingRef = () => ref<Sorting>({ sortBy: 'id', sortingOrder: null })
-const makeFiltersRef = () => ref<Partial<Filters>>({ isActive: true, search: '' })
+const makeFiltersRef = () => ref<Partial<Filters>>({ search: '' })
 
 const { notify } = useToast()
 

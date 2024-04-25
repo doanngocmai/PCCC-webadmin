@@ -21,6 +21,8 @@ export type Filters = {
   search: string
 }
 
+export const listAllBuilding = await buildingApi.getListAllBuilding()
+
 const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }

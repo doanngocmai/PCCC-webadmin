@@ -23,6 +23,8 @@ const getSortItem = (obj: any, sortBy: string) => {
   return obj[sortBy]
 }
 
+export const listAllRole = await roleApi.getListAllRole()
+
 export const getRoles = async (filters?: Partial<Filters & Pagination & Sorting>) => {
   await sleep(1000)
   const number = ref(0)

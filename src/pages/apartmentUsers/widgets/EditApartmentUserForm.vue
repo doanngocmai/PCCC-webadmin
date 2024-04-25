@@ -3,8 +3,9 @@ import { PropType, computed, ref, watch } from 'vue'
 import { useForm } from 'vuestic-ui'
 import { ApartmentUser } from '../types'
 import { validators } from '../../../services/utils'
-// import buildingApi from '.././../buildings/api/BuildingApi'
+import { listAllBuilding } from '../../../data/pages/buildings'
 
+console.log(listAllBuilding.data)
 const props = defineProps({
   apartment: {
     type: Object as PropType<ApartmentUser | null>,
@@ -27,6 +28,11 @@ const defaultNewContent: ApartmentUser = {
 }
 
 const newApartment = ref<ApartmentUser>({ ...defaultNewContent })
+
+const buildingSelectOptions = listAllBuilding.data.map((building) => ({
+  text: building.name,
+  value: building.id,
+}))
 
 const isFormHasUnsavedChanges = computed(() => {
   return Object.keys(newApartment.value).some((key) => {
@@ -59,11 +65,7 @@ watch(
   { immediate: true },
 )
 
-// const listAllBuilding = await buildingApi.getListAllBuilding()
-// console.log(listAllBuilding)
-
 const form = useForm('add-apartment-form')
-console.log(form)
 
 const emit = defineEmits(['close', 'save'])
 
@@ -93,19 +95,20 @@ const onSave = () => {
         <VaInput v-model="newApartment.floorNumber" label="FloorNumber" class="w-full sm:w-1/2" name="floorNumber" />
       </div>
       <div class="flex gap-4 flex-col sm:flex-row w-full">
-        <VaInput v-model="newApartment.address" label="Address" class="w-full sm:w-1/2" name="address" />
+        <VaInput v-model="newApartment.address" label="Address" class="w-full" name="address" />
       </div>
-      <!-- <div class="flex gap-4 flex-col sm:flex-row w-full">
+      <div class="flex gap-4 flex-col sm:flex-row w-full">
         <VaSelect
           v-model="newApartment.buildingId"
-          label="Type"
+          label="Building"
           class="w-full"
+          :options="buildingSelectOptions"
           :rules="[validators.required, (v) => newApartment.buildingId !== 0 || 'Please choose Type']"
           name="type"
           value-by="value"
           option-label="text"
         />
-      </div> -->
+      </div>
     </div>
     <div class="flex gap-2 flex-col-reverse items-stretch justify-end w-full sm:flex-row sm:items-center">
       <VaButton preset="secondary" color="secondary" @click="$emit('close')">Cancel</VaButton>

@@ -3,6 +3,7 @@ import { PropType, computed, ref, watch } from 'vue'
 import { useForm } from 'vuestic-ui'
 import { validators } from '../../../services/utils'
 import { User, CURRENCIES, CURRENCIES_ICONS } from '../typeAccounts'
+import { listAllRole } from '../../../data/pages/roles'
 
 const props = defineProps({
   user: {
@@ -29,6 +30,13 @@ const defaultNewUser: User = {
 }
 
 const newUser = ref<User>({ ...defaultNewUser })
+
+const roleSelections = listAllRole.data.map((role) => ({
+  text: role.roleName,
+  value: role.id,
+}))
+
+console.log(roleSelections)
 
 const userRadioOptions = [
   { text: 'Female', value: true },
@@ -135,6 +143,16 @@ const onSave = () => {
           </template>
         </VaInput>
       </div>
+      <!-- <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <div v-for="role in roleSelections" :key="role.value">
+          <VaCheckbox v-model="role.value" :array-value="role.value.toString()" :label="role.text" class="mb-6" />
+        </div>
+      </div> -->
+      <div class="flex gap-4 flex-col sm:flex-row w-full">
+        <div>
+          <VaCheckbox v-model="roleSelections.value" :label="roleSelections.text" class="mb-6" />
+        </div>
+      </div>
       <div v-if="newUser.id < 0" class="flex gap-4 flex-col sm:flex-row w-full">
         <VaValue v-slot="isPasswordVisible" :default-value="false">
           <VaInput
@@ -157,6 +175,7 @@ const onSave = () => {
           </VaInput>
         </VaValue>
       </div>
+
       <div class="flex gap-4 w-full">
         <div class="flex items-center w-1/2 mt-4">
           <VaCheckbox
@@ -176,4 +195,14 @@ const onSave = () => {
     </div>
   </VaForm>
 </template>
-../typeAccounts
+<!-- <div class="flex gap-4 w-full">
+  <div v-for="role in listRole" :key="role.id">
+    <input
+      type="checkbox"
+      :id="role.id"
+      :value="role.id"
+      v-model="selectedRoles"
+    />
+    <label :for="role.id">{{ role.name }}</label>
+  </div>
+</div> -->
