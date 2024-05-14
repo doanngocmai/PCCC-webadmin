@@ -148,11 +148,11 @@ const onSave = () => {
           <VaCheckbox v-model="role.value" :array-value="role.value.toString()" :label="role.text" class="mb-6" />
         </div>
       </div> -->
-      <div class="flex gap-4 flex-col sm:flex-row w-full">
+      <!-- <div class="flex gap-4 flex-col sm:flex-row w-full">
         <div>
           <VaCheckbox v-model="roleSelections.value" :label="roleSelections.text" class="mb-6" />
         </div>
-      </div>
+      </div> -->
       <div v-if="newUser.id < 0" class="flex gap-4 flex-col sm:flex-row w-full">
         <VaValue v-slot="isPasswordVisible" :default-value="false">
           <VaInput
