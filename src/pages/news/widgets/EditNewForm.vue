@@ -26,12 +26,18 @@ const defaultNewContent: New = {
 
 const image = ref<File>()
 
-const makeAvatarBlobUrl = (image: File) => {
-  return URL.createObjectURL(image)
-}
+// const makeAvatarBlobUrl = (file: File) => {
+//   return URL.createObjectURL(file)
+// }
 
 watch(image, (newImage) => {
-  newNew.value.image = newImage ? makeAvatarBlobUrl(newImage) : ''
+  const reader = new FileReader()
+  reader.onload = (event) => {
+    if (event.target) {
+      newNew.value.image = event.target.result as string
+    }
+  }
+  reader.readAsDataURL(newImage as Blob)
 })
 
 const newNew = ref<New>({ ...defaultNewContent })
@@ -105,6 +111,18 @@ const onSave = () => {
           option-label="text"
         />
       </div>
+      <!-- <div grid md:grid-cols-2 gap-2>
+        <div>
+          <span>File Input</span>
+          <div>
+            <input mt-2 type="file" @input="onFileInput" />
+          </div>
+        </div>
+        <div>
+          <span>Base64</span>
+          <textarea h-40 :value="fileBase64" readonly />
+        </div>
+      </div> -->
       <div class="w-full">
         <VaFileUpload
           v-model="image"
